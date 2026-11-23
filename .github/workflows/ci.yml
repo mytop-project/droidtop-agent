@@ -22,8 +22,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # The bundled game databases moved with the scanner and the engine detector: lib-games and lib-engines
-  # (Droidtop/tracker#867) check that their copies are droidtop-platforms' files at their pinned commit.
+  # The bundled game databases moved with the scanner and the engine detector: mytop-games and mytop-engines
+  # (mytop-project/tracker#867) check that their copies are droidtop-platforms' files at their pinned commit.
 
   test:
     strategy:
@@ -104,7 +104,7 @@ jobs:
           if [ "$SYSTEM" = windows-x86_64 ]; then
             rev=$(sed -n 's/^windowcast-secure-helper = .*rev = "\([0-9a-f]*\)".*/\1/p' Cargo.toml)
             test -n "$rev"
-            cargo install --locked --git https://github.com/Droidtop/windowcast --rev "$rev" windowcast-secure-helper --root helper
+            cargo install --locked --git https://github.com/mytop-project/windowcast --rev "$rev" windowcast-secure-helper --root helper
             cp helper/bin/windowcast-secure-helper.exe dist/windowcast-secure-helper-windows-x86_64.exe
           fi
           if [ -n "$ALSO" ]; then
@@ -120,7 +120,7 @@ jobs:
           path: dist/
 
   # Pythia builds the agent crates it links (python, service, stream and what they use) with Ubuntu's rustc-1.91,
-  # as Launchpad does (Droidtop/tracker#867; 1.91 since 2026-11-12). They are checked with 1.91, resolving dependencies
+  # as Launchpad does (mytop-project/tracker#867; 1.91 since 2026-11-12). They are checked with 1.91, resolving dependencies
   # to versions 1.91 can build, as a consumer's lock would. crates/app and the binary that links it are not Pythia's
   # and are left out.
   msrv:
@@ -242,7 +242,7 @@ jobs:
 
   windows-installer:
     # The Windows build of the test job, made into a per-user installer
-    # (packaging/windows, Droidtop/tracker#116). It is installed silently,
+    # (packaging/windows, mytop-project/tracker#116). It is installed silently,
     # run once, and uninstalled again here before it is offered.
     needs: test
     runs-on: windows-latest
@@ -400,7 +400,7 @@ jobs:
               {"key": "title:ci game", "title": "CI Game", "platform": "pc", "install": {"installed": True, "version": "1.0"}, "base": folder}
           ])
           assert out["games"] == 1, out
-          # A desktop manager's title: key is re-keyed to the one title key, title2:<Lutris slug> (Droidtop/tracker#870);
+          # A desktop manager's title: key is re-keyed to the one title key, title2:<Lutris slug> (mytop-project/tracker#870);
           # nothing was stored under the old key, so it leaves no record or link behind.
           library = store.library()
           assert "title2:ci-game" in library, sorted(library)

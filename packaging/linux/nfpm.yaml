@@ -9,7 +9,7 @@ section: utils
 priority: optional
 maintainer: Droidtop <noreply@github.com>
 vendor: Droidtop
-homepage: https://github.com/Droidtop/droidtop-agent
+homepage: https://github.com/mytop-project/droidtop-agent
 license: GPL-3.0-only
 description: |-
   Keeps this computer in step with droidtop on a handheld

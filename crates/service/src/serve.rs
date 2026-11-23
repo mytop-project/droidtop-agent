@@ -104,7 +104,7 @@ pub fn run(agent: Arc<Agent>) -> std::io::Result<()> {
                 let a = a.clone();
                 thread::spawn(move || {
                     stream.set_read_timeout(Some(Duration::from_secs(120)));
-                    // The same tunnel carries a stream from away (Droidtop/tracker#113).
+                    // The same tunnel carries a stream from away (mytop-project/tracker#113).
                     let away = carried(&mut stream).map(|c| away_stream(&a, peer, c));
                     match Channel::accept(stream, &a.store.key, |p| *p == peer && a.store.is_trusted(p)) {
                         Ok(mut ch) => {
@@ -184,7 +184,7 @@ pub fn run(agent: Arc<Agent>) -> std::io::Result<()> {
 /// A session with [`peer`] is over: said as a warning when it broke off.
 /// [`via`] names the transport when it was not the LAN.
 /// A tunnel session's side link and datagrams, which a stream from away
-/// comes through (Droidtop/tracker#113). Only where this computer can host a
+/// comes through (mytop-project/tracker#113). Only where this computer can host a
 /// stream: elsewhere they are dropped, which closes the side link.
 fn carried(stream: &mut tunnel::TunnelStream) -> Option<droidtop_agent_stream::Carried> {
     if !droidtop_agent_stream::supported() {

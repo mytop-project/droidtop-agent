@@ -18,7 +18,7 @@ use std::path::Path;
 use std::sync::mpsc::{Receiver, Sender};
 use std::sync::{Arc, Mutex};
 
-// The agent's tunnel as windowcast's carrier (Droidtop/tracker#113); also
+// The agent's tunnel as windowcast's carrier (mytop-project/tracker#113); also
 // built for its tests on Linux x86_64, where nothing serves it.
 #[cfg(any(windows, all(test, target_os = "linux", target_arch = "x86_64")))]
 pub mod carried;
@@ -27,7 +27,7 @@ pub mod carried;
 /// answer names no address.
 pub const PORT: u16 = 47100;
 
-/// One tunnel session's side link and datagrams, as lib-sync hands them
+/// One tunnel session's side link and datagrams, as mytop-sync hands them
 /// over (`TunnelStream::side` and `TunnelStream::datagrams`). An empty read
 /// on the side link is its end; dropping `side_out` closes it.
 pub struct Carried {
@@ -73,7 +73,7 @@ enum State {
 }
 
 /// A viewer connected to the embedded host now, as the window shows it
-/// (Droidtop/tracker#116).
+/// (mytop-project/tracker#116).
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Watcher {
     /// The viewer's windowcast identity in hex: a paired handheld's `viewer`.
@@ -144,7 +144,7 @@ impl Streamer {
 
     /// Keeps the viewer `viewer` (hex) to the windows `globs` match, app id
     /// or title (windowcast's `HostControl::limit_device`,
-    /// Droidtop/tracker#116); empty takes the limit away. Sessions it starts
+    /// mytop-project/tracker#116); empty takes the limit away. Sessions it starts
     /// after this use it. Nothing to do where this process does not serve.
     pub fn limit_viewer(&self, viewer: &str, globs: Vec<String>) -> Result<(), String> {
         #[cfg(windows)]
@@ -192,7 +192,7 @@ impl Streamer {
     }
 
     /// Serves a handheld whose stream comes through the agent's own tunnel
-    /// (Droidtop/tracker#113): windowcast's signaling on the tunnel's side
+    /// (mytop-project/tracker#113): windowcast's signaling on the tunnel's side
     /// link, its media on the tunnel's datagrams. `first` is what
     /// [`Carried::first_words`] read. Blocks until the session ends,
     /// so it runs on the tunnel session's own thread. Only this process's

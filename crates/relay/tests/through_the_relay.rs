@@ -1,5 +1,5 @@
 //! A WireGuard tunnel between two paired keys through the relay, with neither side reaching the
-//! other directly: the computer's tunnel (lib-sync's `tunnel::serve`) and the handheld's
+//! other directly: the computer's tunnel (mytop-sync's `tunnel::serve`) and the handheld's
 //! (`tunnel::connect`) are the ones a direct call uses, unchanged. The relay sees only ciphertext,
 //! forwards nothing to a key that did not allow the sender, and takes no one who cannot prove a key.
 
@@ -74,7 +74,7 @@ fn a_tunnel_runs_through_the_relay_and_the_relay_sees_only_ciphertext() {
     let hh_bridge = Bridge::connect(&at, &handheld, vec![pc.peer_id()], None, Duration::from_secs(5)).unwrap();
     wait_until("both on the relay", || relay.is_connected(&pc.peer_id()) && relay.is_connected(&handheld.peer_id()));
 
-    // Two calls at once, each with its own session through the relay (Droidtop/tracker#529).
+    // Two calls at once, each with its own session through the relay (mytop-project/tracker#529).
     let secret = b"a save file nobody but the computer reads";
     let mut calls = Vec::new();
     for n in 0..2u8 {

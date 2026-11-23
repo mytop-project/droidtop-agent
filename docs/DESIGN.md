@@ -14,7 +14,7 @@ handheld, section 22), it never runs a Syncthing instance, and it never needs
 Tailscale or any other VPN. It is meant to be light: one process on the
 computer, no resident process on the handheld.
 
-Tracked as Droidtop/tracker#373 (with #380 for plugin context sync, #284 and
+Tracked as mytop-project/tracker#373 (with #380 for plugin context sync, #284 and
 #224 for saves, #364 for the server VM).
 
 ## Contents
@@ -46,7 +46,7 @@ Tracked as Droidtop/tracker#373 (with #380 for plugin context sync, #284 and
 
 Read from droidtop main at c5dd7d8d.
 
-- **Store cloud saves (Droidtop/tracker#224).** Steam Cloud is built:
+- **Store cloud saves (mytop-project/tracker#224).** Steam Cloud is built:
   `StoreSaves` (`library-core/.../stores/StoreSaves.kt`) is the launch seam.
   `PcGameProvider` calls `StoreSaves.beforeLaunch` (waits at most 45 s), and
   `WineGameActivity` calls `StoreSaves.afterExit`, which runs the upload as a
@@ -117,7 +117,7 @@ software licensing restrictions" (decision 1).
   The same key, converted to X25519 (the standard birational map, as
   libsodium's `crypto_sign_ed25519_*_to_curve25519` does), is the device's
   WireGuard static key. One key, one trust decision, for every transport.
-- **A device certificate over that key** (Droidtop/tracker#556, `core::cert`):
+- **A device certificate over that key** (mytop-project/tracker#556, `core::cert`):
   self-signed X.509 that the device makes itself, issued by no one (no
   signing root of ours, Droidtop Core's included, plays any part: pinning at
   pairing is the trust). Its subject is the device's short id; it is valid
@@ -228,7 +228,7 @@ software licensing restrictions" (decision 1).
 Every live connection is the same channel, whatever carries it: **mutual
 TLS 1.3** (rustls on the ring provider, `core::channel`), each side
 presenting its device certificate (section 3). It replaced a Noise_IK
-channel (Droidtop/tracker#556, owner: "use mtls for device co-identification
+channel (mytop-project/tracker#556, owner: "use mtls for device co-identification
 for pairing"): one mechanism, standard TLS, the same on the computer and on
 the handheld, since droidtop runs this core through `AgentNative`.
 
@@ -242,7 +242,7 @@ the handheld, since droidtop runs this core through `AgentNative`.
   certificate, after TLS has checked the handshake signature with it, and
   refuses the session unless that device is pinned. Refusing, it first
   sends one `error` with `code: not_paired` through the finished channel,
-  then closes (Droidtop/tracker#531: a forgotten handheld was told the
+  then closes (mytop-project/tracker#531: a forgotten handheld was told the
   computer "did not answer"). Only the device the connecting side asked for
   can send it, since that side checked its certificate first, so the
   connecting side stops there (`ConnectError::NotPaired`) instead of trying
@@ -286,7 +286,7 @@ exactly one reply (`{"t":"error","message":...}` on failure).
 | `launch_game {game}` | `launch {outcome}` | start a Steam game on the computer (section 17) |
 | `announce {values}` | `announced {values}` | each side's per-plugin values for the devices paired with it (below) |
 
-**Announcements** (hello feature `announce`, Droidtop/tracker#556, #553):
+**Announcements** (hello feature `announce`, mytop-project/tracker#556, #553):
 a device publishes a small value per plugin to the devices paired with it,
 such as the Syncthing plugin's `{"syncthing": "<its device ID>"}`, so that
 plugin can accept exactly the devices the person paired, with no pairing
@@ -384,13 +384,13 @@ marks on a game are shared.
   - **Two keys changed on 2026-11-05, and a game keeps its old key as an
     alias** (games-scan `Found::aliases`):
     - An Epic game was `epic:<AppName>`; it is now `epic:<CatalogItemId>`,
-      droidtop's key for the same game (Droidtop/tracker#871). The catalog
+      droidtop's key for the same game (mytop-project/tracker#871). The catalog
       id comes from the launcher's `.item` manifest, or for legendary and
       Heroic from legendary's `metadata/<AppName>.json`. Without one the key
       stays `epic:<AppName>`.
     - A game with no store id was `title:` and its letters and digits joined
       by single spaces; it is now `title2:` and Lutris's slug of its title
-      (Droidtop/tracker#870; the owner, 2026-11-05: "letters and digits only,
+      (mytop-project/tracker#870; the owner, 2026-11-05: "letters and digits only,
       but with space-to-hyphen conversion. Lutris's standard"), the same
       function as droidtop's `TitleKeys.slug`. "Being a DIK" is
       `title2:being-a-dik`.
@@ -416,7 +416,7 @@ marks on a game are shared.
   `title` (the person's own name for the game), `sort_name`, and
   `collections` (a sorted list of collection names, made where missing).
   Per-device choices (emulator, launch screen, media paths) do not travel
-  (Droidtop/tracker#469 part 1). On a computer, Lutris's "favorite" and
+  (mytop-project/tracker#469 part 1). On a computer, Lutris's "favorite" and
   ".hidden" categories are read as marks, but only when Lutris changed them
   since the last scan, so a mark set elsewhere is not undone. The agent never
   writes a launcher's store.
@@ -428,7 +428,7 @@ marks on a game are shared.
   - After it, the core names the shared marks that differ from what droidtop
     reported (`Library::marks_to_write`), and droidtop writes them into its
     own library.
-- **Versions** (Droidtop/tracker#469 part 2): each device states the version
+- **Versions** (mytop-project/tracker#469 part 2): each device states the version
   it has installed in its facts. That is a store's build or version, the
   version a folder game's name carries, or droidtop's set or derived
   version. Each device keeps a game's version history (`GameRecord::versions`:
@@ -436,7 +436,7 @@ marks on a game are shared.
   changes it applies, so a device learns the versions of devices it never
   meets. droidtop turns a newer version on a computer into "an update is
   available" (its SPEC 7o).
-- **Game updates between devices** (Droidtop/tracker#469 part 3; owner,
+- **Game updates between devices** (mytop-project/tracker#469 part 3; owner,
   2026-10-10: "If I install an update to a game on my desktop, I should be
   able to sync it to the handheld and version-manage it automatically").
   `core::gamecopy` copies a game's folder as a NEW folder beside the game's
@@ -461,14 +461,14 @@ marks on a game are shared.
   folder name.** A folder game with no store id is keyed by its title
   (`title_key`). droidtop reads a name written as one run of words,
   `DtSyncTest`, as "Dt Sync Test" (`GameTitleParser.splitRunTogether`,
-  Droidtop/tracker#282); the scanner does the same (`split_run_together`),
+  mytop-project/tracker#282); the scanner does the same (`split_run_together`),
   or the same folder was two games, one per device, and neither a computer's
-  newer version nor a mark reached the other (Droidtop/tracker#529).
+  newer version nor a mark reached the other (mytop-project/tracker#529).
 - **A computer that lost its library is told.** A handheld that pulls from a
   computer and finds its sequence number lower than the one it pulled up to
   before knows the computer lost state (a restore, a reinstall). It sends
   everything it has again and pulls everything; both are newest-wins, so
-  nothing is doubled (Droidtop/tracker#531).
+  nothing is doubled (mytop-project/tracker#531).
 - **Play time:** each device reports its own total and last played time. A
   game's total is the sum, and its last played time is the latest. Nothing
   overwrites another device's numbers.
@@ -559,7 +559,7 @@ droidtop's `docs/plugin-api.md` (F8). The shape:
   plugin's own repository on the plugin's own schedule, a fault ends only
   that program, and it is a plain process boundary between two separately
   licensed works.
-- **Built (Droidtop/tracker#794): adapter protocol 2.** The agent speaks
+- **Built (mytop-project/tracker#794): adapter protocol 2.** The agent speaks
   protocols 1 and 2; an adapter says which in `describe`.
   - **The copy** is `{generation, records, files}`, kept on the computer at
     `adapters/<context>/copy/current.json` (`droidtop_agent_core::copy`). A
@@ -568,7 +568,7 @@ droidtop's `docs/plugin-api.md` (F8). The shape:
     stops changes nothing (the next open removes its leftover). The
     generation goes up by one with each copy made current. `files` is in the
     type and empty today: a context of more than records (Syncthing's index,
-    Droidtop/tracker#793) sends its files through the piece transfer, checked
+    mytop-project/tracker#793) sends its files through the piece transfer, checked
     by digest, and they are never merged; a file both sides changed since the
     baseline is a conflict for the person.
   - **On the channel** (never part of an offer, gated like the other context
@@ -590,7 +590,7 @@ droidtop's `docs/plugin-api.md` (F8). The shape:
     to a file and runs it, and the agent makes it the current copy in one
     step. The program never touches the copy folder, so the agent is the only
     writer of the generation.
-  - **Snapshot on read** (owner, 2026-11-05, Droidtop/tracker#794,
+  - **Snapshot on read** (owner, 2026-11-05, mytop-project/tracker#794,
     choosing it over an adapter that watches the app's files and runs
     `contexts publish`): an app the plugin does not control, F95Checker,
     cannot publish. An adapter for one says `"snapshot": true` in
@@ -643,7 +643,7 @@ droidtop's `docs/plugin-api.md` (F8). The shape:
   in the agent's plugin host, confined, and calls the same API through the
   host's broker as it does on the handheld: `updated` is a host call, and
   `received` reaches the plugin as an event. The host, its broker and its
-  sandbox are Droidtop/tracker#606 and the computer plugin host's own
+  sandbox are mytop-project/tracker#606 and the computer plugin host's own
   design. Until that host runs on a system, the two commands above
   (`contexts publish` and the adapter's `received`) are how the two notices
   reach a program there.
@@ -718,7 +718,7 @@ share only ever sees ciphertext.
      not per device: a library sync and the game copy the person starts from
      it right after (or two calls at once) each get their own session, and a
      call never lands on the last one's inner connection while it closes
-     (Droidtop/tracker#529). A handshake from a new endpoint is a new call;
+     (mytop-project/tracker#529). A handshake from a new endpoint is a new call;
      data from a new endpoint is a live session whose device moved
      (WireGuard's own roaming).
    - **Finding each other's public endpoint:** endpoints are learned
@@ -816,14 +816,14 @@ share only ever sees ciphertext.
    both, is the next backend. Credentials for any share are the person's own,
    entered through droidtop's in-app sign-in helper and stored with
    `KeystoreSecretCipher`; nothing that authenticates ships in either program.
-   - **The agent's WebDAV share** (Droidtop/tracker#800):
+   - **The agent's WebDAV share** (mytop-project/tracker#800):
      `droidtop-agent share webdav <url> [--user <name>] [--allow-http]`, in
      place of the folder (setting one clears the other). The letters, their
-     names and their sealing are the folder's: both are a lib-sync
+     names and their sealing are the folder's: both are a mytop-sync
      `share::Share`, and the minute's pass (`crates/service/src/share.rs`)
      runs over either.
-   - **One client, lib-net's.** The WebDAV client is `net-remote`'s
-     (Droidtop/lib-net, owner on #573: "Share client? That's be in lib-net"),
+   - **One client, mytop-net's.** The WebDAV client is `net-remote`'s
+     (mytop-project/mytop-net, owner on #573: "Share client? That's be in mytop-net"),
      with default features off, so WebDAV only: PROPFIND to list, GET, PUT to
      a temporary name then MOVE onto the letter's name so a reader never
      takes half of one, DELETE (after a PROPFIND that refuses a folder) and
@@ -834,12 +834,12 @@ share only ever sees ciphertext.
      never race for one name and a delete never takes a newer version.
      `If-Match`/`If-None-Match` would matter for a file both sides rewrite;
      a later backend use that needs them adds them in net-remote.
-   - **Adapter here, for now.** lib-sync v0.1.7 has the same
-     `net-remote`-to-`Share` adapter, but lib-saves, lib-plugins and lib-games
-     pin lib-sync v0.1.6, and two lib-syncs in one build are two copies of
+   - **Adapter here, for now.** mytop-sync v0.1.7 has the same
+     `net-remote`-to-`Share` adapter, but mytop-saves, mytop-plugins and mytop-games
+     pin mytop-sync v0.1.6, and two lib-syncs in one build are two copies of
      its types. So the service carries the 30-line adapter
-     (`webdav::RemoteShare`) until those move, then uses lib-sync's.
-   - **Rust 1.85 holds for Pythia.** lib-net needs 1.89, so WebDAV is the
+     (`webdav::RemoteShare`) until those move, then uses mytop-sync's.
+   - **Rust 1.85 holds for Pythia.** mytop-net needs 1.89, so WebDAV is the
      service's optional `webdav` feature: the agent and the app turn it on,
      Pythia's crates (`python`, the service alone) do not.
    - **The password, sealed to the computer's own key** (owner, 2026-11-06):
@@ -853,7 +853,7 @@ share only ever sees ciphertext.
      programs and the shell history see it.
 4. **A droidtop-run relay**, on the server VM (#364): a DERP-style
    relay that forwards ciphertext between two keys. Only as a fallback, and
-   never a community-run one. Built in Droidtop/tracker#800 as
+   never a community-run one. Built in mytop-project/tracker#800 as
    `crates/relay` (`droidtop-agent-relay`: the server, its client and the
    `droidtop-relay` program), with the computer's side in the service.
    - **It carries the WireGuard tunnel's own packets** (owner, 2026-11-06,
@@ -877,7 +877,7 @@ share only ever sees ciphertext.
      call that arrives gets a loopback socket of its own that sends to the
      agent's WireGuard socket (127.0.0.1:47611), so `tunnel::serve` sees
      each call from an endpoint of its own and keeps one session per call
-     (Droidtop/tracker#529). Each call is a flow, a random 32-bit number,
+     (mytop-project/tracker#529). Each call is a flow, a random 32-bit number,
      in the relay's frames.
    - **The wire:** TCP to port 47615, then frames: a type byte, a 4-byte
      length, the body (`Challenge`, `Hello`, `Allow`, `Send`, `Recv`). A
@@ -901,7 +901,7 @@ share only ever sees ciphertext.
    - **Kept separate so it can move.** `crates/relay` depends only on
      sync-core's keys, so it moves whole into a shared library repository
      (#867) once droidtop takes it.
-   - **Tests** (`crates/relay/tests/through_the_relay.rs`) run lib-sync's
+   - **Tests** (`crates/relay/tests/through_the_relay.rs`) run mytop-sync's
      own `tunnel::serve` and `tunnel::connect` through a relay in the
      process, with two calls at once. A tap shows each forwarded packet:
      each one is a WireGuard message, and none holds the plaintext or
@@ -935,7 +935,7 @@ no store APIs and no network.
 7i, 7m: `GameEngineDetector.scan` and `PcFolderScan`), so the computer and
 the handheld find the same games in the same tree. Engines are decided by
 droidtop-platforms' `engines-database.json`, which the agent embeds
-(Droidtop/lib-engines `crates/detect/data/`, refreshed by copying the file in) and evaluates row by
+(mytop-project/mytop-engines `crates/detect/data/`, refreshed by copying the file in) and evaluates row by
 row, every row, with droidtop's three byte probes (Godot's pack, a Twine page,
 Unity's player). A folder with an engine's layout or a program is a game and
 ends the walk; a folder holding two engine games is a collection; a lone game
@@ -946,7 +946,7 @@ is read from its appmanifests (a folder with no manifest is a leftover), a
 folder named for a ROM system (`platforms-database.json`, droidtop's aliases)
 is read by the ROM rules when it holds that system's files, and a Flashpoint
 install is its launcher plus the games it downloaded. A launcher's own
-folder is no game and is not walked (Droidtop/tracker#538: Pythia's scan of
+folder is no game and is not walked (mytop-project/tracker#538: Pythia's scan of
 G:\games tracked `battle.net`): a folder named for Battle.net, the EA app
 (`EA Desktop`), GOG Galaxy or Ubisoft Connect, one holding a program only a
 launcher has (`Battle.net.exe`, `EADesktop.exe`, `Origin.exe`,
@@ -1026,7 +1026,7 @@ and skips folders it cannot read.
   - `:library-core`, `dev.droidtop.library.computers`: paired computers, the
     save sync beside `StoreSaves`, and library and context sync;
   - `:app`: the Computers settings catalog and the pairing screen (code and QR);
-  - droidtop's own next step (Droidtop/tracker#556): paired devices with a
+  - droidtop's own next step (mytop-project/tracker#556): paired devices with a
     kind, the handheld-to-handheld pairing screen, and the plugin API's
     `devices.list_paired`, `devices.announce` and `devices.changed` (#553)
     over the operations above.
@@ -1042,9 +1042,9 @@ that is this computer's agent (Pythia, section 16) is built from the same
 code as the programs (owner, 2026-10-14: "We will modularize the desktop
 agent, and use its modules as part of pythia"). A lower crate never depends
 on a higher one. The design went through a two-round society review
-on Droidtop/tracker#461.
+on mytop-project/tracker#461.
 
-**The shared crates are libraries of their own (Droidtop/tracker#867, 2026-11-04).** Owner: "We don't
+**The shared crates are libraries of their own (mytop-project/tracker#867, 2026-11-04).** Owner: "We don't
 want a single "droidtop core", we want each program to have its own scaffold, that can use as many
 shared libraries and stuff as possible. The scaffold belongs to wach one. The libraries are shared, and
 don't "belong" to either." And D2: one repository per library family, each versioned and pinned by each
@@ -1058,12 +1058,12 @@ agent's scaffold (`stream`, `relay`, `service`, `agent`, `app`) and the Python b
 
 | Crate | What it is | Depends on |
 |---|---|---|
-| `sync-core` (Droidtop/lib-sync `crates/core`) | Both ends: identity and its certificate, the pairing exchange, the TLS channel, the protocol and the `Host` trait the server answers through, the transport primitives (WireGuard tunnel, LAN discovery, rendezvous client, cloud-share letters), the library model, the save and context sync rules, game copy. No UI and no platform-specific code. | windowcast's crates |
-| `sync-store` (Droidtop/lib-sync `crates/store`) | This computer's agent state on disk, `Store`: `Dirs`, `Settings`, the identity shared with windowcast and the migration onto it, the trusted and device lists, `library.json` under its cross-process lock, the person's marks. No networking. | core |
-| `games-scan` (Droidtop/lib-games `crates/scan`) | The scanner (section 11), over `scan::Options` (game and ROM folders, what is switched off), never the agent's state. The platforms database is in its `data`; engine detection, with the engines database, is `engines-detect` (Droidtop/lib-engines). | core, engines-detect |
-| `saves-locate` (Droidtop/lib-saves `crates/locate`) | Where a game's saves are on this computer (the person's entries, Ludusavi custom games, the Ludusavi index, token roots natively or in a prefix), the kept-copies listing and restore (sections 6 and 9). Looks games up in a scan it is given. | core, scan, store |
-| `sync-pair` (Droidtop/lib-sync `crates/pair`) | Pairing from the computer: typing the handheld's code, or showing one (section 3). | core, store |
-| `plugins-contexts` (Droidtop/lib-plugins `crates/contexts`) | Context adapters: offers, approval, install, runs (section 8). | core, store |
+| `sync-core` (mytop-project/mytop-sync `crates/core`) | Both ends: identity and its certificate, the pairing exchange, the TLS channel, the protocol and the `Host` trait the server answers through, the transport primitives (WireGuard tunnel, LAN discovery, rendezvous client, cloud-share letters), the library model, the save and context sync rules, game copy. No UI and no platform-specific code. | windowcast's crates |
+| `sync-store` (mytop-project/mytop-sync `crates/store`) | This computer's agent state on disk, `Store`: `Dirs`, `Settings`, the identity shared with windowcast and the migration onto it, the trusted and device lists, `library.json` under its cross-process lock, the person's marks. No networking. | core |
+| `games-scan` (mytop-project/mytop-games `crates/scan`) | The scanner (section 11), over `scan::Options` (game and ROM folders, what is switched off), never the agent's state. The platforms database is in its `data`; engine detection, with the engines database, is `engines-detect` (mytop-project/mytop-engines). | core, engines-detect |
+| `saves-locate` (mytop-project/mytop-saves `crates/locate`) | Where a game's saves are on this computer (the person's entries, Ludusavi custom games, the Ludusavi index, token roots natively or in a prefix), the kept-copies listing and restore (sections 6 and 9). Looks games up in a scan it is given. | core, scan, store |
+| `sync-pair` (mytop-project/mytop-sync `crates/pair`) | Pairing from the computer: typing the handheld's code, or showing one (section 3). | core, store |
+| `plugins-contexts` (mytop-project/mytop-plugins `crates/contexts`) | Context adapters: offers, approval, install, runs (section 8). | core, store |
 | `crates/relay` | The droidtop-run relay (section 10, transport 4): the server, the `droidtop-relay` program for the server VM, and the `Bridge` client that carries a WireGuard tunnel through it. | core |
 | `crates/stream` | windowcast's host and its Windows window source, started when a handheld first asks to watch a game (section 22). On other systems it only says it cannot stream. | windowcast's host |
 | `crates/service` | The running agent, `Agent`: a `Store` plus the last scan, the save catalog, the rendezvous's state; its `Host` answers (with the launch rule, section 17); serving (LAN, discovery, WireGuard), the computer's rendezvous, the cloud share, a desktop manager's games, autostart, the stream (section 22). | all above |
@@ -1097,7 +1097,7 @@ agent's scaffold (`stream`, `relay`, `service`, `agent`, `app`) and the Python b
   user unit disabled. The downloaded tools (nfpm, uruntime) are pinned by
   version and SHA-256 in `packaging/linux/pins.env`.
   Windows also gets an installer (`packaging/windows`, built by the
-  `windows-installer` job, Droidtop/tracker#116):
+  `windows-installer` job, mytop-project/tracker#116):
   `droidtop-agent-setup-windows-x86_64.exe`, made with Inno Setup (pinned by
   version and SHA-256 in `packaging/windows/pins.env`). It installs per user
   with no administrator into `%LOCALAPPDATA%\Programs\droidtop-agent`: the
@@ -1167,7 +1167,7 @@ macOS, so nobody needs the command line.
   `Store::library_now`) and every change is read, changed and written under a
   lock file (`edit_devices`, `edit_library`). A copy that wrote its start-up
   state back used to empty the paired devices and drop marks
-  (Droidtop/tracker#528, #531).
+  (mytop-project/tracker#528, #531).
 - **The stack is windowcast's reference app's:** egui through eframe (OpenGL
   via glow). The tray uses `tray-icon` on Windows and macOS. On Linux it is
   a StatusNotifierItem over D-Bus (`ksni`, pure Rust), so the Linux build
@@ -1179,7 +1179,7 @@ macOS, so nobody needs the command line.
   - **Status:** whether it serves, the firewall hint (TCP and UDP 47610 at
     home, UDP 47611 away), the paired handhelds with when each was last seen
     (each can be forgotten), and how it is reached away from home. Then
-    **Streaming games** (Droidtop/tracker#116): whether this computer can
+    **Streaming games** (mytop-project/tracker#116): whether this computer can
     stream (Windows only, section 22), the handhelds that can watch the
     games they start (those with a `viewer`), the streaming host's state,
     and who is watching now: each viewer connected to the embedded host
@@ -1230,7 +1230,7 @@ macOS, so nobody needs the command line.
 
 Owner, 2026-10-14: "pythia will NEVER call droidtop-agent. If it's running,
 it will BE our agent", and "We can step away from python whenever we want".
-[Pythia](https://github.com/bi0shacker001/pythia), the owner's desktop game
+[Pythia](https://github.com/mytop-project/pythia), the owner's desktop game
 library manager (largely based on Lutris), is this computer's agent while it
 runs. It does not speak to a separate agent program. It loads the agent
 itself, in its own process, so there is still one implementation of the
@@ -1268,7 +1268,7 @@ identity, pairing, channel, transports, library, saves and scanner.
     - `saves`: `lookup(key, title="", fetch=False)`, `copies`,
       `restore(key, path, title="")`
     - `service`: `serve`, `serving`, `events(since=0, wait=0)`
-- **One set of bindings, built into each manager's own module** (Droidtop/tracker#867, owner 2026-11-04:
+- **One set of bindings, built into each manager's own module** (mytop-project/tracker#867, owner 2026-11-04:
   "each program to have its own scaffold, that can use as many shared libraries and stuff as possible").
   `crates/python` is also a library (`rlib`): a manager's extension module depends on it, calls
   `configure(Embedder { program, title, open, module })` (the name `DTCQ1` answers with, its name in
@@ -1335,11 +1335,11 @@ identity, pairing, channel, transports, library, saves and scanner.
   installed, every submodule imported and called once, before it is
   offered. They are attached to each release beside the programs.
 - **Pythia's better logic moves into the crates**, each its own change,
-  recorded on Droidtop/tracker#461, in this order:
+  recorded on mytop-project/tracker#461, in this order:
   1. cross-store identity: Pythia's opaque game id, its `platform_ids`
      aliases and the merges a person confirmed, as a library change kind in
      core (both ends keep the same identity model), behind a hello feature.
-     **First slice built (Droidtop/tracker#798):** `Change::Link {game,
+     **First slice built (mytop-project/tracker#798):** `Change::Link {game,
      into, at}` says key `game` is the same game as key `into` (`None`
      undoes it; one per key, newest wins; a key is never linked to itself).
      `Library::link` makes one and `Library::canonical` follows links to the
@@ -1358,7 +1358,7 @@ identity, pairing, channel, transports, library, saves and scanner.
      person's devices: every device resolves a game to the same key. Next:
      Pythia's `reconciliation.merge()` and its `platform_ids` write links,
      then its opaque id as a `pythia:<id>` key, then droidtop reading
-     `canonical`. Where it lives (owner, 2026-11-04, Droidtop/tracker#867:
+     `canonical`. Where it lives (owner, 2026-11-04, mytop-project/tracker#867:
      "We don't want a single \"droidtop core\", we want each program to have
      its own scaffold, that can use as many shared libraries and stuff as
      possible. The scaffold belongs to wach one. The libraries are shared,
@@ -1383,7 +1383,7 @@ identity, pairing, channel, transports, library, saves and scanner.
 
 ## 17. Starting a game for a handheld
 
-Owner (2026-10-14, Droidtop/tracker#552): "Steam link streaming is actually
+Owner (2026-10-14, mytop-project/tracker#552): "Steam link streaming is actually
 a pretty huge gap for us", and, approving the agent request and the Steam
 module as its home: "Yep. Wire it into the steam module specifically,
 because that controls how we handle steam games. Simplifies stuff".
@@ -1459,7 +1459,7 @@ library of its own (Pythia) can start those games for a handheld.
 
 ## 18. Syncthing with the paired devices
 
-droidtop's Syncthing plugin (`droidtop.syncthing`, Droidtop/tracker#553;
+droidtop's Syncthing plugin (`droidtop.syncthing`, mytop-project/tracker#553;
 droidtop docs/plugin-api.md D21) pairs through droidtop's own device
 pairing, so Syncthing's pairing is never shown: it announces
 `{"syncthing": "<device ID>", "addresses": [...]}` to every paired device
@@ -1766,7 +1766,7 @@ python environment", bundled, because the sandbox must control it. And:
   be made.** Each plugin runs in its own process under bi0shacker001/sandbox:
   seccomp lockdown with every path call brokered on Linux (built), an
   AppContainer in a job object on Windows, and a Seatbelt profile on macOS
-  (Droidtop/tracker#606). The process holds only its channel to the broker:
+  (mytop-project/tracker#606). The process holds only its channel to the broker:
   it can open no file by itself, has no network, and can start no program.
   Python is not trusted for any of this (`ctypes`, sockets and `subprocess`
   end at the same refused system calls).
@@ -1814,7 +1814,7 @@ python environment", bundled, because the sandbox must control it. And:
 
 ## 22. Streaming a game it starts (windowcast's host, embedded)
 
-Owner (2026-10-31, Droidtop/tracker#860): "the droidtop agent has to
+Owner (2026-10-31, mytop-project/tracker#860): "the droidtop agent has to
 implement the windowcast library. the windowcast host application is a
 reference application. Once the droidtop agent implements it, pythia
 inherits it." And (#373, 2026-10-23, section 20): "It launches the game,
@@ -1830,7 +1830,7 @@ Sandustry from the owner's Windows desktop to a Retroid Pocket 5.
   its own. Pythia hosts the agent's service in its process, so it streams
   with no code of its own. No streaming code is written here: the crate
   only starts windowcast's. It is the agent's own scaffold over a shared
-  library that belongs to no app (owner, 2026-11-04, Droidtop/tracker#867:
+  library that belongs to no app (owner, 2026-11-04, mytop-project/tracker#867:
   "The scaffold belongs to wach one. The libraries are shared, and don't
   \"belong\" to either."), so it stays with the agent when the shared
   crates move to their own repos.
@@ -1870,7 +1870,7 @@ Sandustry from the owner's Windows desktop to a Retroid Pocket 5.
   compositor (sway) and PulseAudio, and would add libpulse to the agent's
   Linux packages; there is no macOS host. Elsewhere the agent states no
   `stream`.
-- **What a handheld may watch** (Droidtop/tracker#116): every window, the
+- **What a handheld may watch** (mytop-project/tracker#116): every window, the
   default, or only the games it starts (`droidtop-agent sharing <id> all |
   games`, or the choice beside each handheld under Streaming games on the
   Status page), kept by device id in the agent's own
@@ -1883,11 +1883,11 @@ Sandustry from the owner's Windows desktop to a Retroid Pocket 5.
   the computer's other applications (droidtop's Apps), which reach
   windowcast without the agent and a game's limit would refuse. Built to the
   recommendation, owner to confirm.
-- **From away, through the agent's tunnel** (Droidtop/tracker#113; the
+- **From away, through the agent's tunnel** (mytop-project/tracker#113; the
   owner, 2026-10-28: "Our standard carrier tunnel is also a remote
   streaming tunnel"). Each WireGuard session (section 10) carries, beside
   the agent's channel, a side link (a second TCP link, inner port 47614)
-  and datagrams (inner UDP), lib-sync's `TunnelStream::side` and
+  and datagrams (inner UDP), mytop-sync's `TunnelStream::side` and
   `datagrams`. On a computer that can stream, the tunnel's thread hands
   both to a thread of their own, which waits for the handheld's first
   words on the side link and then serves it with the embedded host through
@@ -1904,28 +1904,28 @@ Sandustry from the owner's Windows desktop to a Retroid Pocket 5.
 - **Not built:**
   - the handheld's half of a stream from away: droidtop's library opening
     the tunnel's side link and datagrams to windowcast's `connect_over`
-    when the LAN address does not answer (Droidtop/tracker#113 step 4);
+    when the LAN address does not answer (mytop-project/tracker#113 step 4);
   - the Linux host, and service mode (a host running as SYSTEM to reach the
     secure desktop);
   - a stream for a computer asking another computer to play (`play_on`),
     which sends no viewer.
 
-## 23. KDE Connect (Droidtop/tracker#645)
+## 23. KDE Connect (mytop-project/tracker#645)
 
 The owner, 2026-11-05: "We want to get kde connect and tailscale integrated
 more closely. File transfer, keyboard input, and etc are good first things",
 and on #645: "We might as well implement all of kde connect, both client and
 server stuff. We wanna be a whole computer, but sometimes we're a phone."
-Library home, owner, 2026-11-05: "lib-kdeconnect implements explicitly
+Library home, owner, 2026-11-05: "mytop-kdeconnect implements explicitly
 kde-connect as a programmatic module".
 
-- **The device is lib-kdeconnect's** (`kdeconnect-service`): protocol 8,
+- **The device is mytop-kdeconnect's** (`kdeconnect-service`): protocol 8,
   discovery, the TLS link, pairing with the verification key, the plugins.
   It speaks the real protocol, so the official KDE Connect apps see droidtop
   and Pythia as KDE Connect devices, and they see each other the same way.
   This repository adds no protocol code.
 - **One operation table, two front ends,** each in the program's own
-  native module (Droidtop/tracker#867: each program has its own scaffold).
+  native module (mytop-project/tracker#867: each program has its own scaffold).
   `kdeconnect_service::ops` is the only binding:
   - droidtop calls `AgentNative.call("kdeconnect_<op>", json)`, which
     droidtop's own native library (droidtop `native/src/api.rs`, the crate
@@ -1934,12 +1934,12 @@ kde-connect as a programmatic module".
     `native/src/kdeconnect.rs`, its own native module), where a reply with
     `error` raises `AgentError`.
   This repository's `crates/python` carries no KDE Connect of its own:
-  Pythia's module, built over it (Droidtop/tracker#867), adds the
+  Pythia's module, built over it (mytop-project/tracker#867), adds the
   `kdeconnect` submodule itself. `crates/android` is no longer built for
   droidtop.
   The operations (`start`, `stop`, `identity`, `devices`, `event`,
   `announce`, `addresses`, `pair`, `accept`, `refuse`, `unpair`, `ping`) and
-  their replies are listed in lib-kdeconnect's `crates/service/src/ops.rs`.
+  their replies are listed in mytop-kdeconnect's `crates/service/src/ops.rs`.
 - **It runs while it is switched on.** This is the one part of the library
   that keeps threads and listeners (UDP 1716 and a TCP port in 1716-1764)
   between calls, because a KDE Connect device has to be findable. It runs

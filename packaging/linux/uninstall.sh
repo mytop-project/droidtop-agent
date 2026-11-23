@@ -10,7 +10,7 @@
 #
 # Works from anywhere: the copy in ~/.local/share/droidtop-agent/, an
 # unpacked tarball, or downloaded alone:
-#   curl -fsSL https://github.com/Droidtop/droidtop-agent/releases/latest/download/uninstall.sh | sh
+#   curl -fsSL https://github.com/mytop-project/droidtop-agent/releases/latest/download/uninstall.sh | sh
 set -eu
 
 # ---- this project ---------------------------------------------------------

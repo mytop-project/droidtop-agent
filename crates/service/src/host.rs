@@ -58,7 +58,7 @@ impl crate::launch::Watch for Watching<'_> {
         let viewer = PeerId::from_hex(&self.ask.viewer).map_err(|_| "the handheld named no viewer windowcast can trust".to_string())?;
         self.agent.store.set_viewer(self.peer, &viewer).map_err(|e| format!("could not trust the handheld's viewer ({e})"))?;
         let hosting = self.agent.streamer.ensure(&self.agent.store.dirs.computer)?;
-        // What this handheld may watch (Droidtop/tracker#116): this game's windows, or every one.
+        // What this handheld may watch (mytop-project/tracker#116): this game's windows, or every one.
         let limit = match crate::sharing::of(&self.agent.store.dirs.config, &self.peer.to_hex()) {
             crate::sharing::Sharing::Games => self.game_windows.clone(),
             crate::sharing::Sharing::All => Vec::new(),
@@ -227,7 +227,7 @@ impl Host for Agent {
     fn archive_dir(&self, game: &GameRef) -> PathBuf {
         let dir = self.store.dirs.archive().join(file_key(&game.key));
         // The folder is named for the key; the title is kept beside the copies so the
-        // Saves page can name a game the library does not list (Droidtop/tracker#528).
+        // Saves page can name a game the library does not list (mytop-project/tracker#528).
         let title = dir.join("title.txt");
         if !game.title.is_empty() && std::fs::read_to_string(&title).ok().as_deref() != Some(game.title.as_str()) {
             let _ = std::fs::create_dir_all(&dir).and_then(|()| std::fs::write(&title, &game.title));

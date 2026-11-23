@@ -30,7 +30,7 @@ fn lookup(py: Python<'_>, key: String, title: String, fetch: bool) -> PyResult<P
     run(py, move || {
         let a = agent()?;
         // What the agent syncs and what it leaves to the Syncthing here (droidtop-agent
-        // Agent::save_plan; Droidtop/tracker#538).
+        // Agent::save_plan; mytop-project/tracker#538).
         Ok(match a.save_plan(&GameRef { key, title }, fetch) {
             None => json!({ "patterns": null, "files": [], "syncthing": [], "all_by_syncthing": false }),
             Some(plan) => {

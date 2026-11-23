@@ -6,22 +6,22 @@ members = ["crates/service", "crates/stream", "crates/agent", "crates/app", "cra
 version = "0.1.0"
 edition = "2021"
 license = "GPL-3.0-only"
-repository = "https://github.com/Droidtop/droidtop-agent"
+repository = "https://github.com/mytop-project/droidtop-agent"
 # Pythia builds the crates it links with Ubuntu's rustc-1.91, the newest versioned rustc in noble-updates and
-# jammy-updates (owner, 2026-11-12: newest versions; lib-sync 0.2.1's ML-KEM stack needs 1.87).
+# jammy-updates (owner, 2026-11-12: newest versions; mytop-sync 0.2.1's ML-KEM stack needs 1.87).
 rust-version = "1.91"
 
 [workspace.dependencies]
-# The shared libraries (Droidtop/tracker#867): each a repository of its own that belongs to no program,
+# The shared libraries (mytop-project/tracker#867): each a repository of its own that belongs to no program,
 # pinned here by tag. Their crates keep the names this workspace's code imports them by.
 droidtop-agent-core = { package = "sync-core", git = "https://github.com/Droidtop/lib-sync", tag = "v0.2.1" }
 droidtop-agent-store = { package = "sync-store", git = "https://github.com/Droidtop/lib-sync", tag = "v0.2.1" }
 droidtop-agent-pair = { package = "sync-pair", git = "https://github.com/Droidtop/lib-sync", tag = "v0.2.1" }
-# lib-net's share client, for store and forward through a WebDAV share (docs/DESIGN.md section 10,
-# transport 3; Droidtop/tracker#800). WebDAV only: no SFTP (russh) in the agent until it uses it. Only the
+# mytop-net's share client, for store and forward through a WebDAV share (docs/DESIGN.md section 10,
+# transport 3; mytop-project/tracker#800). WebDAV only: no SFTP (russh) in the agent until it uses it. Only the
 # service's optional `webdav` feature takes it, which the agent and the app turn on and Pythia's crates do not.
 net-remote = { git = "https://github.com/Droidtop/lib-net", tag = "v0.2.6", default-features = false }
-# The lib-sync 0.2 releases (Droidtop/tracker#573): lib-games v0.4.0, lib-saves v0.3.0, lib-plugins v0.3.0.
+# The mytop-sync 0.2 releases (mytop-project/tracker#573): mytop-games v0.4.0, mytop-saves v0.3.0, mytop-plugins v0.3.0.
 droidtop-agent-scan = { package = "games-scan", git = "https://github.com/Droidtop/lib-games", tag = "v0.4.0" }
 droidtop-agent-saves = { package = "saves-locate", git = "https://github.com/Droidtop/lib-saves", tag = "v0.3.0" }
 droidtop-agent-contexts = { package = "plugins-contexts", git = "https://github.com/Droidtop/lib-plugins", tag = "v0.3.0" }
@@ -43,7 +43,7 @@ windowcast-rendezvous = { git = "https://github.com/Droidtop/windowcast", rev = 
 windowcast-host = { git = "https://github.com/Droidtop/windowcast", rev = "37e2e432d565e94a83e49ea064283fbc661c2ef0" }
 windowcast-agent-windows = { git = "https://github.com/Droidtop/windowcast", rev = "37e2e432d565e94a83e49ea064283fbc661c2ef0" }
 # windowcast's transport and protocol: the conduit a stream through the
-# agent's tunnel takes (Droidtop/tracker#113). The same windowcast as above.
+# agent's tunnel takes (mytop-project/tracker#113). The same windowcast as above.
 windowcast-transport = { git = "https://github.com/Droidtop/windowcast", rev = "37e2e432d565e94a83e49ea064283fbc661c2ef0" }
 windowcast-protocol = { git = "https://github.com/Droidtop/windowcast", rev = "37e2e432d565e94a83e49ea064283fbc661c2ef0" }
 ed25519-dalek = { version = "2.1", features = ["rand_core"] }

@@ -1,4 +1,4 @@
-; The Windows installer (docs/DESIGN.md section 13, Droidtop/tracker#116): per
+; The Windows installer (docs/DESIGN.md section 13, mytop-project/tracker#116): per
 ; user, no administrator, like install.sh on Linux. It installs the agent, the
 ; window-and-tray app and windowcast's secure-screen helper into the person's
 ; own Programs folder, adds a Start menu entry, and can turn on starting at
@@ -22,8 +22,8 @@ AppName=droidtop-agent
 AppVersion={#AppVersion}
 AppVerName=droidtop-agent {#AppVersion}
 AppPublisher=Droidtop
-AppPublisherURL=https://github.com/Droidtop/droidtop-agent
-AppSupportURL=https://github.com/Droidtop/droidtop-agent
+AppPublisherURL=https://github.com/mytop-project/droidtop-agent
+AppSupportURL=https://github.com/mytop-project/droidtop-agent
 ; Per user only: never asks for an administrator, never offers all users.
 PrivilegesRequired=lowest
 DefaultDirName={autopf}\droidtop-agent

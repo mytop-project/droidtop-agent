@@ -75,7 +75,7 @@ fn scan_with(
 /// The launcher whose own folder `path` is (`"Battle.net"`, `"EA app"`,
 /// `"Origin"`, `"GOG Galaxy"`, `"Ubisoft Connect"`, `"Epic Games Launcher"`),
 /// or None: the scanner's rule that such a folder is no game
-/// (Droidtop/tracker#538). Reads the folder's listing only.
+/// (mytop-project/tracker#538). Reads the folder's listing only.
 #[pyfunction]
 fn launcher_folder(py: Python<'_>, path: PathBuf) -> PyResult<PyObject> {
     run(py, move || Ok(json!(droidtop_agent_scan::folders::launcher_folder(&path))))

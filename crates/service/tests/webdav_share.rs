@@ -1,5 +1,5 @@
 //! Store and forward through a WebDAV share (docs/DESIGN.md section 10, transport 3;
-//! Droidtop/tracker#800), against a WebDAV server in this process: a handheld leaves a letter, the
+//! mytop-project/tracker#800), against a WebDAV server in this process: a handheld leaves a letter, the
 //! agent opens it, removes it and answers in the handheld's inbox. The share only ever receives
 //! sealed letters, and the share's password is kept sealed on the computer.
 #![cfg(feature = "webdav")]

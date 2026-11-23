@@ -80,7 +80,7 @@ impl Agent {
     }
 
     /// What this agent syncs of a game's saves, and what it leaves to the
-    /// Syncthing already running here (Droidtop/tracker#538). A save location
+    /// Syncthing already running here (mytop-project/tracker#538). A save location
     /// inside a folder Syncthing syncs is Syncthing's: two programs writing the
     /// same files would fight. An engine that keeps one set of saves in several
     /// places and merges them itself (Ren'Py) is Syncthing's as a whole once
@@ -188,8 +188,8 @@ fn fixed_folder(pattern: &str, roots: &Roots) -> Option<std::path::PathBuf> {
 
 /// Links each game's other keys to its key where the library holds
 /// something under one: an Epic game stored by AppName before it was keyed
-/// by catalog id (Droidtop/tracker#871), a game stored under the older
-/// `title:` key (Droidtop/tracker#870). Its installs, marks and play time
+/// by catalog id (mytop-project/tracker#871), a game stored under the older
+/// `title:` key (mytop-project/tracker#870). Its installs, marks and play time
 /// are then the same game's on every device that reads links, and nothing
 /// is rewritten. A key nothing was stored under is not linked, so a library
 /// carries no links for keys no device used. Returns how many it linked.

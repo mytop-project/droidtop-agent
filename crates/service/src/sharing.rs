@@ -1,5 +1,5 @@
 //! What each paired handheld may watch when it streams from this computer
-//! (docs/DESIGN.md section 22, Droidtop/tracker#116): every window, as
+//! (docs/DESIGN.md section 22, mytop-project/tracker#116): every window, as
 //! before, or only the windows of the game it starts here. Kept in this
 //! agent's own `stream-sharing.json` beside its settings, by device id.
 //!

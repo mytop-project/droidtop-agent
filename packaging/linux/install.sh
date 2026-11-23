@@ -7,7 +7,7 @@
 # alone (it then fetches the tarball for this machine from the latest release
 # and checks it against the release's SHA256SUMS):
 #
-#   curl -fsSL https://github.com/Droidtop/droidtop-agent/releases/latest/download/install.sh | sh
+#   curl -fsSL https://github.com/mytop-project/droidtop-agent/releases/latest/download/install.sh | sh
 #   curl -fsSL .../install.sh | sh -s -- --autostart
 #
 # Everything it creates is listed in ~/.local/share/droidtop-agent/install-manifest,
@@ -16,7 +16,7 @@ set -eu
 
 # ---- this project ---------------------------------------------------------
 NAME=droidtop-agent
-REPO=Droidtop/droidtop-agent
+REPO=mytop-project/droidtop-agent
 BINS="droidtop-agent droidtop-agent-app"
 DESKTOP_ID=dev.droidtop.agent
 # ---------------------------------------------------------------------------

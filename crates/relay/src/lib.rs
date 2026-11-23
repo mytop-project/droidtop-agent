@@ -1,8 +1,8 @@
-//! A droidtop-run relay, DERP-style (docs/DESIGN.md section 10, transport 4; Droidtop/tracker#800):
+//! A droidtop-run relay, DERP-style (docs/DESIGN.md section 10, transport 4; mytop-project/tracker#800):
 //! the fallback when two paired devices cannot reach each other directly, not even with a punched
 //! hole. It forwards WireGuard packets between two public keys and nothing else.
 //!
-//! **What the relay sees.** The packets are the tunnel's own (lib-sync's `tunnel`), so they are
+//! **What the relay sees.** The packets are the tunnel's own (mytop-sync's `tunnel`), so they are
 //! already sealed by WireGuard with keys from the two devices' pairing identities before they leave
 //! a device, and the session channel's TLS runs inside them. The relay learns the two public keys,
 //! the packets' sizes and times, never a key that opens them and never plaintext. A packet for a key
@@ -12,7 +12,7 @@
 //! **How a tunnel goes through it.** The tunnel speaks UDP, so a [`Bridge`] stands in for the other
 //! side's address: a loopback UDP socket per call. Whatever the tunnel sends to it goes to the relay
 //! for the peer; whatever the relay brings back comes out of it. Neither the tunnel nor the session
-//! channel changes, and each call keeps its own session (Droidtop/tracker#529) because each has its
+//! channel changes, and each call keeps its own session (mytop-project/tracker#529) because each has its
 //! own flow and its own loopback socket on both sides.
 //!
 //! **The wire.** TCP to the relay, then frames: a type byte, a 4-byte big-endian length, the body.

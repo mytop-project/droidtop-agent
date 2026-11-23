@@ -1,7 +1,7 @@
 # droidtop-agent
 
 A small program for your computer (Windows, Linux or macOS) that keeps it in
-step with [droidtop](https://github.com/Droidtop/droidtop) on a handheld:
+step with [droidtop](https://github.com/mytop-project/droidtop) on a handheld:
 
 - **Saves.** Before a game starts on the handheld and after it ends, its saves
   are brought up to date with the computer's copy. If both sides changed,
@@ -26,7 +26,7 @@ step with [droidtop](https://github.com/Droidtop/droidtop) on a handheld:
 - **Streaming a game.** On Windows, when the handheld asks to play a game
   on this computer and watch it, the agent starts the game and streams
   its window, with its sound and gamepads, through the
-  [windowcast](https://github.com/Droidtop/windowcast) library it embeds.
+  [windowcast](https://github.com/mytop-project/windowcast) library it embeds.
   The handheld must be allowed to start games here (Settings, Offered,
   Starting games here). Gamepads need the ViGEmBus driver.
 
@@ -90,7 +90,7 @@ and `droidtop-agent saves add` covers anything else.
 
 ## Pythia, the desktop manager
 
-[Pythia](https://github.com/bi0shacker001/pythia) is the associated desktop manager: a multi-system game library manager (GPL-3.0). It does not run games. It keeps track of which games exist, where, on which of your systems and platforms, and what each one needs to run.
+[Pythia](https://github.com/mytop-project/pythia) is the associated desktop manager: a multi-system game library manager (GPL-3.0). It does not run games. It keeps track of which games exist, where, on which of your systems and platforms, and what each one needs to run.
 
 ## Install on Windows
 
@@ -118,8 +118,8 @@ Linux with glibc 2.39 or newer), each with its SHA-256 in `SHA256SUMS`:
 For you only, without root or a package manager:
 
 ```
-curl -fsSL https://github.com/Droidtop/droidtop-agent/releases/latest/download/install.sh | sh
-curl -fsSL https://github.com/Droidtop/droidtop-agent/releases/latest/download/install.sh | sh -s -- --autostart
+curl -fsSL https://github.com/mytop-project/droidtop-agent/releases/latest/download/install.sh | sh
+curl -fsSL https://github.com/mytop-project/droidtop-agent/releases/latest/download/install.sh | sh -s -- --autostart
 ```
 
 That downloads the tarball for this machine, checks it against `SHA256SUMS`,
@@ -149,7 +149,7 @@ cargo build --release -p droidtop-agent -p droidtop-agent-app
 CI builds both programs for Linux (x86_64, aarch64, and the four Linux packages above), Windows and macOS (arm64,
 x86_64) on every push. Each green build on `main` is published as a release. droidtop's Android library
 (`libdroidtop_agent.so`) is built by droidtop from its own `native/`, over the same shared libraries
-(Droidtop/tracker#867).
+(mytop-project/tracker#867).
 
 ## Licence
 

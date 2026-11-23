@@ -1,5 +1,5 @@
 //! `droidtop-relay [<listen address>]`: the relay for the server VM (docs/DESIGN.md section 10,
-//! transport 4; Droidtop/tracker#364). It listens on TCP 47615 on every address unless told
+//! transport 4; mytop-project/tracker#364). It listens on TCP 47615 on every address unless told
 //! otherwise, keeps nothing on disk and holds no key.
 
 use std::net::TcpListener;

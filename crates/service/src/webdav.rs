@@ -1,5 +1,5 @@
-//! A WebDAV share for store and forward (docs/DESIGN.md section 10, transport 3; Droidtop/tracker#800):
-//! the next backend after a folder the person's own sync tool carries. The client is lib-net's
+//! A WebDAV share for store and forward (docs/DESIGN.md section 10, transport 3; mytop-project/tracker#800):
+//! the next backend after a folder the person's own sync tool carries. The client is mytop-net's
 //! `net-remote` (PROPFIND, GET, PUT to a temporary name then MOVE, DELETE, MKCOL), not one of the
 //! agent's own, and the letters on it are the mailbox's, sealed as they are in a folder.
 //!
@@ -115,9 +115,9 @@ fn write_private(path: &std::path::Path, share: &WebDavShare) -> io::Result<()> 
     Ok(())
 }
 
-/// Any lib-net share as a lib-sync [`Share`]. lib-sync has the same adapter as `share::RemoteShare`
-/// from v0.1.7 (its `net-remote` feature); it is here until lib-saves, lib-plugins and lib-games take
-/// that lib-sync too, since two lib-syncs in one build are two incompatible copies of its types.
+/// Any mytop-net share as a mytop-sync [`Share`]. mytop-sync has the same adapter as `share::RemoteShare`
+/// from v0.1.7 (its `net-remote` feature); it is here until mytop-saves, mytop-plugins and mytop-games take
+/// that mytop-sync too, since two lib-syncs in one build are two incompatible copies of its types.
 pub struct RemoteShare<R: Remote>(pub R);
 
 fn remote_path(path: &str) -> io::Result<RemotePath> {

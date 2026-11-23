@@ -1,5 +1,5 @@
 //! This computer's Syncthing kept in step with the paired devices'
-//! (docs/DESIGN.md section 18; Droidtop/tracker#553). droidtop's Syncthing
+//! (docs/DESIGN.md section 18; mytop-project/tracker#553). droidtop's Syncthing
 //! plugin (`droidtop.syncthing`) announces `{"syncthing": "<device ID>",
 //! "addresses": [...]}` to every device the person paired with droidtop and
 //! accepts exactly the IDs its counterparts announce, so Syncthing's own
@@ -112,7 +112,7 @@ pub fn read_config(home: &Path) -> Result<Config, String> {
 
 /// A folder the Syncthing here syncs (its `config.xml`), named as the person
 /// labelled it. Save sync leaves a game's saves inside one to Syncthing
-/// (Droidtop/tracker#538): two programs writing the same files would fight.
+/// (mytop-project/tracker#538): two programs writing the same files would fight.
 #[derive(Serialize, Debug, Clone, PartialEq, Eq)]
 pub struct Folder {
     pub label: String,

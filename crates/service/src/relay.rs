@@ -1,5 +1,5 @@
 //! The computer's side of a droidtop-run relay (docs/DESIGN.md section 10, transport 4;
-//! Droidtop/tracker#800): when one is set (`droidtop-agent relay set <host:port>`), the running agent
+//! mytop-project/tracker#800): when one is set (`droidtop-agent relay set <host:port>`), the running agent
 //! keeps a connection to it, takes packets only from its paired devices, and hands each call that
 //! arrives to its own WireGuard socket on loopback. The relay forwards the tunnel's packets and
 //! nothing else, so what a handheld does through it is a normal WireGuard call.

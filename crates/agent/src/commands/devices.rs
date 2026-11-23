@@ -220,7 +220,7 @@ fn launch_switch(agent: &Agent, id: &str, allow: bool) -> Result<(), String> {
 }
 
 /// What each handheld may watch when it streams from here (docs/DESIGN.md
-/// section 22, Droidtop/tracker#116).
+/// section 22, mytop-project/tracker#116).
 pub fn sharing(agent: &Arc<Agent>, args: &[&str]) -> Result<(), String> {
     use droidtop_agent_service::sharing::{self, Sharing};
     let config = &agent.store.dirs.config;

@@ -32,4 +32,4 @@ session (Wayland or X11); the tray icon appears where the desktop shows
 StatusNotifier icons. The agent listens on port 47610 (TCP and UDP) on the
 local network and UDP 47611 for WireGuard.
 
-https://github.com/Droidtop/droidtop-agent
+https://github.com/mytop-project/droidtop-agent

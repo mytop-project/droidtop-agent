@@ -6,65 +6,65 @@ release carries until its number is written in.
 
 ## Unreleased
 
-- On lib-sync 0.2.1 (Droidtop/tracker#573), with lib-games 0.4, lib-saves 0.3 and lib-plugins 0.3, the libraries' lib-sync
-  0.2 releases, and lib-net v0.2.6 for the WebDAV share. Rust 1.91 is the oldest the workspace builds with (was 1.85, the
+- On mytop-sync 0.2.1 (mytop-project/tracker#573), with mytop-games 0.4, mytop-saves 0.3 and mytop-plugins 0.3, the libraries' mytop-sync
+  0.2 releases, and mytop-net v0.2.6 for the WebDAV share. Rust 1.91 is the oldest the workspace builds with (was 1.85, the
   window 1.88): the newest versioned rustc in Ubuntu's noble-updates and jammy-updates, which Pythia builds with (owner,
   2026-11-12). The lock takes the newest compatible version of every dependency.
-- A game streams from away through the agent's own WireGuard tunnel (Droidtop/tracker#113, docs/DESIGN.md section
+- A game streams from away through the agent's own WireGuard tunnel (mytop-project/tracker#113, docs/DESIGN.md section
   22): on Windows, the embedded windowcast host serves a handheld over the tunnel's side link (signaling) and its
   datagrams (media), with windowcast's `serve_over`. The handheld's half, in droidtop's library, is next.
-- Builds with Rust 1.85 again for what Pythia links (Droidtop/tracker#867): the workspace's `rust-version` is 1.85,
-  on lib-sync 0.1.6, games-scan 0.3.1, saves-locate 0.2.1 and plugins-contexts 0.2.2, the releases that build with
+- Builds with Rust 1.85 again for what Pythia links (mytop-project/tracker#867): the workspace's `rust-version` is 1.85,
+  on mytop-sync 0.1.6, games-scan 0.3.1, saves-locate 0.2.1 and plugins-contexts 0.2.2, the releases that build with
   it. The tray window (`crates/app`) declares 1.88, which egui 0.33 needs. A new `msrv` CI job checks Pythia's
   crates with 1.85.
 - Epic games are keyed by Epic's catalog id, `epic:<CatalogItemId>`, the key droidtop gives them, so an Epic game
-  installed on both sides is one game and Stream from and Play on find it (Droidtop/tracker#871). A game with no
+  installed on both sides is one game and Stream from and Play on find it (mytop-project/tracker#871). A game with no
   store id is keyed `title2:` and its title's Lutris slug ("Being a DIK" is `title2:being-a-dik`), the one title key
-  on every device (Droidtop/tracker#870). After a scan the agent links each game's old key to its new one wherever
+  on every device (mytop-project/tracker#870). After a scan the agent links each game's old key to its new one wherever
   something was stored under the old key, so nothing a person set is lost (docs/DESIGN.md, "A game's identity
   across devices"). Built on games-scan 0.3.0.
-- KDE Connect (Droidtop/tracker#645, docs/DESIGN.md section 23): droidtop
+- KDE Connect (mytop-project/tracker#645, docs/DESIGN.md section 23): droidtop
   and Pythia can now be KDE Connect devices. They are found by the official
   KDE Connect apps and by each other, pair with the 8-character code both
   screens show, and share files, links, text and the clipboard both ways,
   type and move the pointer, ring each other, show each other's battery and
   notifications. droidtop and Pythia reach it through their own native modules; this
   repository records the design (docs/DESIGN.md section 23).
-- A Windows installer (Droidtop/tracker#116):
+- A Windows installer (mytop-project/tracker#116):
   `droidtop-agent-setup-windows-x86_64.exe` installs the agent for you
   alone, with no administrator, adds it to the Start menu, and can start it
   when you sign in. Uninstalling it stops the agent and keeps your
   pairings, settings and kept saves.
-- Cross-store identity, first part (Droidtop/tracker#798, docs/DESIGN.md
+- Cross-store identity, first part (mytop-project/tracker#798, docs/DESIGN.md
   section 16): the library can say that two keys are one game (a `link`
   change, newest wins, undone with no target), and every device follows
   links to the same key. Only devices that state hello feature `identity`
   receive links; the cloud folder carries none (droidtop's side is in its
   `native/`). Pythia sets them with
   `store.link` and reads `store.canonical`.
-- KDE Connect (Droidtop/tracker#645, docs/DESIGN.md section 23): droidtop
+- KDE Connect (mytop-project/tracker#645, docs/DESIGN.md section 23): droidtop
   and Pythia can now be KDE Connect devices. They are found by the official
   KDE Connect apps and by each other, pair with the 8-character code both
   screens show, and ping. File transfer, clipboard and remote input follow.
   droidtop and Pythia reach it through their own native modules; this
   repository records the design (docs/DESIGN.md section 23).
 - What each handheld may watch when it streams from this computer
-  (Droidtop/tracker#116): every window, as before, or only the games it
+  (mytop-project/tracker#116): every window, as before, or only the games it
   starts. Choose it beside each handheld under Streaming games on the
   Status page, or with `droidtop-agent sharing <id> all|games`.
 - The window's Status page has a Streaming games section
-  (Droidtop/tracker#116): whether this computer can stream to a handheld,
+  (mytop-project/tracker#116): whether this computer can stream to a handheld,
   which handhelds can watch the games they start, and who is watching now,
   with how many windows and for how long.
 - Releases no longer carry droidtop's Android library (`droidtop-agent-android.tar.zst`): droidtop builds
   `libdroidtop_agent.so` itself from its own `native/`, the code that was `crates/android` here, over the
-  same shared libraries (Droidtop/tracker#867). Nothing changes for people using the agent.
+  same shared libraries (mytop-project/tracker#867). Nothing changes for people using the agent.
 - The Python module (`droidtop_agent`) can now keep a copy of a game's saves on demand (`saves.back_up`),
   take a desktop manager's launcher for the games it starts itself (`service.set_launcher`), and pair this
   computer with another by comparing a code (`pair.offer`, `find`, `pick`, `compare_status`, `confirm`,
   `stop`), as Pythia's own copy of these bindings already did. A desktop manager now builds its module
-  over this one instead of copying it (Droidtop/tracker#867).
-- Context adapters, protocol 2 (Droidtop/tracker#794, docs/DESIGN.md
+  over this one instead of copying it (mytop-project/tracker#867).
+- Context adapters, protocol 2 (mytop-project/tracker#794, docs/DESIGN.md
   section 8): an adapter for an app that cannot publish its own copy
   (F95Checker) says `"snapshot": true`, and before a handheld reads the copy
   the agent asks it for the app's data and publishes it when it changed.
@@ -72,15 +72,15 @@ release carries until its number is written in.
 - A device this computer no longer knows (it was unpaired here) is told so
   as the connection opens, with `code: not_paired`, so the handheld says to
   pair again instead of that the computer did not answer
-  (Droidtop/tracker#531). On the home network only: through WireGuard a
+  (mytop-project/tracker#531). On the home network only: through WireGuard a
   forgotten device still gets no answer.
 - Nothing changes for people using the agent. Behind it, the code it shares
   with droidtop and Pythia now lives in shared libraries of its own
-  (Droidtop/tracker#867): pairing, sync and the agent's state
-  (Droidtop/lib-sync), the scanner (Droidtop/lib-games), engine detection
-  (Droidtop/lib-engines), save locations (Droidtop/lib-saves) and plugin
-  context adapters (Droidtop/lib-plugins), each pinned here by tag.
-- Streaming a game to the handheld (Droidtop/tracker#860, docs/DESIGN.md
+  (mytop-project/tracker#867): pairing, sync and the agent's state
+  (mytop-project/mytop-sync), the scanner (mytop-project/mytop-games), engine detection
+  (mytop-project/mytop-engines), save locations (mytop-project/mytop-saves) and plugin
+  context adapters (mytop-project/mytop-plugins), each pinned here by tag.
+- Streaming a game to the handheld (mytop-project/tracker#860, docs/DESIGN.md
   section 22): on Windows the agent embeds windowcast's host. When a
   handheld that may start games here asks to play a game and watch it, the
   agent trusts that handheld's windowcast viewer (no PIN: the pairing with
@@ -91,7 +91,7 @@ release carries until its number is written in.
 - A handheld reaching the computer through WireGuard can make a second
   call right after the first: copying a newer version of a game straight
   after the library sync showed it no longer fails with "the computer did
-  not answer through WireGuard" (Droidtop/tracker#529, #469 part 3).
+  not answer through WireGuard" (mytop-project/tracker#529, #469 part 3).
 - Service mode (docs/DESIGN.md section 19, windowcast#467): off unless the
   person turns it on, after it says what it does; `droidtop-agent
   service-mode [enable | disable | uninstall]` and Settings > Service mode
@@ -100,7 +100,7 @@ release carries until its number is written in.
   The Windows release carries the helper
   (`windowcast-secure-helper-windows-x86_64.exe`).
 - Syncthing with the paired devices (docs/DESIGN.md section 18,
-  Droidtop/tracker#553): the running agent uses the Syncthing already
+  mytop-project/tracker#553): the running agent uses the Syncthing already
   answering in Syncthing's standard folder, or starts one there, announces
   its device ID and LAN addresses as `droidtop.syncthing`, and adds each
   paired device's announced Syncthing ID (removing only the ones it added
@@ -119,7 +119,7 @@ release carries until its number is written in.
   computer. The refusal to pin a computer is gone (docs/DESIGN.md section 3).
 - Every session is mutual TLS 1.3 (rustls), each device presenting a
   self-signed certificate over its own key, in place of the Noise channel
-  (docs/DESIGN.md sections 3 and 4, Droidtop/tracker#556). Pairing (now
+  (docs/DESIGN.md sections 3 and 4, mytop-project/tracker#556). Pairing (now
   version 3) carries each side's certificate fingerprint and kind
   (computer or handheld). The pin is the certificate's public key, so
   devices paired before keep their pairing, but **both sides must update
@@ -128,7 +128,7 @@ release carries until its number is written in.
   others while droidtop asks (`serve_start`, `serve_stop`).
 - Announcements: a device publishes a small value per plugin to the devices
   paired with it (`announce`), so the Syncthing plugin can accept exactly
-  the paired devices (Droidtop/tracker#553). On the computer:
+  the paired devices (mytop-project/tracker#553). On the computer:
   `droidtop_agent.store.set_announce(plugin, value)`, and each device's
   `announced` in `store.devices()`.
 - What the running agent does is an event a host program can read, not
@@ -138,17 +138,17 @@ release carries until its number is written in.
   Pythia can log and show handhelds' launches, syncs and arriving games.
   `droidtop-agent run` prints what it printed before, plus a line when a
   session ends and when saves or library changes moved (docs/DESIGN.md
-  section 16, Droidtop/tracker#461).
+  section 16, mytop-project/tracker#461).
 - A launcher's own folder (Battle.net, the EA app, Origin, GOG Galaxy's
   client, Ubisoft Connect, Epic's Launcher) in a game folder is no longer
   a game; `droidtop_agent.scan.launcher_folder(path)` gives the same rule
-  to a desktop manager (docs/DESIGN.md section 11, Droidtop/tracker#538).
+  to a desktop manager (docs/DESIGN.md section 11, mytop-project/tracker#538).
 - The agent is a set of library crates, so a desktop manager is built from
   the same code as the programs: `store` (the state on disk), `scan` (the
   scanner, over the folders it is given), `saves` (where saves are, kept
   copies, restore), `pair`, `contexts` and `service` (the running agent);
   `droidtop-agent` and `droidtop-agent-app` are thin programs over them
-  (docs/DESIGN.md section 13, Droidtop/tracker#461). Nothing changes for a
+  (docs/DESIGN.md section 13, mytop-project/tracker#461). Nothing changes for a
   person using them.
 - The Python module `droidtop_agent` has a submodule per crate with typed
   functions (`droidtop_agent.store.devices()`, `.pair.show()`,
@@ -166,26 +166,26 @@ release carries until its number is written in.
   key and refuses any other, only for a handheld the person allowed
   (Settings > Start games, or `droidtop-agent launch allow <id>`; off by
   default), and answers started, not allowed, unknown game, Steam not running
-  or failed (docs/DESIGN.md section 17, Droidtop/tracker#552).
+  or failed (docs/DESIGN.md section 17, mytop-project/tracker#552).
 - The agent as a Python extension module, `droidtop_agent` (crates/python,
   one abi3 wheel per system in each release), so Pythia is this computer's
   agent while it runs: same identity, pairings, library, saves, scanner and
   service, in its own process. The games Pythia tracks join the scan where
   the scanner has not found them (docs/DESIGN.md section 16,
-  Droidtop/tracker#461).
+  mytop-project/tracker#461).
 - The window attaches to a running agent instead of competing with it, and
   every copy of the agent (headless, window, command line) reads the paired
   devices and the library from their files again when they changed and writes
   them under a lock. Before, a copy that started earlier wrote its empty
   device list over a pairing, so Status said "None yet", and wrote its old
-  library over marks (Droidtop/tracker#528, #531).
+  library over marks (mytop-project/tracker#528, #531).
 - A folder named as one run of words (`DtSyncTest v1.1`) is titled
   "Dt Sync Test" as droidtop titles it, so it is one game on the computer and
   the handheld: the handheld sees the computer's v1.1 and its marks travel
-  (Droidtop/tracker#529). Games found under the old title are re-found under
+  (mytop-project/tracker#529). Games found under the old title are re-found under
   the new one at the next scan.
 - A handheld whose computer lost its library sends everything again and takes
-  everything, so its favourites come back (Droidtop/tracker#531).
+  everything, so its favourites come back (mytop-project/tracker#531).
 - Marks can be set on the computer: favourite, hidden and collections in the
   window's Library page, `droidtop-agent mark` and `marks` on a command line.
 - The window's Library page lists every place games are found with a switch
@@ -196,7 +196,7 @@ release carries until its number is written in.
   the preferred device.
 
 - A game's version can be copied between a handheld and a computer
-  (`core::gamecopy`, `game_pull` and `game_push`; Droidtop/tracker#469 part
+  (`core::gamecopy`, `game_pull` and `game_push`; mytop-project/tracker#469 part
   3). It arrives as a new folder beside the game's others, resumable and
   checked per file. On the computer it goes to the person's first game
   folder, never into a store's install folders.
@@ -205,14 +205,14 @@ release carries until its number is written in.
   `install.sh` (per user, no root, `--autostart` optional) and `uninstall.sh`
   (removes exactly what the install manifest lists; `--purge` also deletes
   your data), and `SHA256SUMS` for everything in the release
-  (Droidtop/tracker#373).
+  (mytop-project/tracker#373).
 
 ## build-28
 
 - Every game keeps its version history across devices (device, version,
   when first heard of; `GameRecord::versions`), filled from the install
   changes each device applies, so it travels across many devices
-  (Droidtop/tracker#469 part 2). The mesh test checks that a handheld three
+  (mytop-project/tracker#469 part 2). The mesh test checks that a handheld three
   hops away knows both computers' versions.
 
 ## build-27
@@ -222,7 +222,7 @@ release carries until its number is written in.
   since the last scan counts, so a mark set on a handheld is not undone, and
   the agent never writes Lutris's database. The organization droidtop
   carries in marks grows to rating, its own title, sort title, kid game and
-  collections (Droidtop/tracker#469 part 1); the core needed no change for
+  collections (mytop-project/tracker#469 part 1); the core needed no change for
   that.
 
 ## build-26

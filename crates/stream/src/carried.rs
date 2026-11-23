@@ -1,6 +1,6 @@
-//! A stream carried by the agent's own tunnel (Droidtop/tracker#113): the
+//! A stream carried by the agent's own tunnel (mytop-project/tracker#113): the
 //! owner, 2026-10-28, "Our standard carrier tunnel is also a remote
-//! streaming tunnel". lib-sync's WireGuard session hands the agent two more
+//! streaming tunnel". mytop-sync's WireGuard session hands the agent two more
 //! things beside its channel: a side link (a second reliable byte stream)
 //! and datagrams, each as two blocking queues. windowcast's `serve_over`
 //! takes an async byte stream and a conduit of datagrams. This module joins
@@ -146,7 +146,7 @@ mod tests {
         }
     }
 
-    /// Two ends of a tunnel session as lib-sync hands them over: each end's
+    /// Two ends of a tunnel session as mytop-sync hands them over: each end's
     /// outbound queue is the other's inbound, for the side link and for the
     /// datagrams.
     fn tunnel() -> (Carried, Carried) {
@@ -161,7 +161,7 @@ mod tests {
     }
 
     /// A handheld's viewer reaches the computer's host through the tunnel's
-    /// side link and datagrams alone (Droidtop/tracker#113): the host waits
+    /// side link and datagrams alone (mytop-project/tracker#113): the host waits
     /// for its first words, serves it, and answers a Ping; the media went
     /// through the datagrams.
     #[tokio::test(flavor = "multi_thread")]

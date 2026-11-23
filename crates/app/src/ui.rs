@@ -484,7 +484,7 @@ impl App {
     }
 
     /// Streaming a game to a handheld (docs/DESIGN.md sections 15 and 22,
-    /// Droidtop/tracker#116): whether this computer can, the handhelds that
+    /// mytop-project/tracker#116): whether this computer can, the handhelds that
     /// may watch, and who watches now.
     fn streaming(&mut self, ui: &mut egui::Ui, service: &Service, devices: &[droidtop_agent_store::Device]) {
         ui.strong("Streaming games");
@@ -500,7 +500,7 @@ impl App {
         } else {
             ui.label(format!("Handhelds that can watch the games they start: {}.", allowed.join(", ")));
         }
-        // What each may watch (Droidtop/tracker#116): every window, or only the games it starts.
+        // What each may watch (mytop-project/tracker#116): every window, or only the games it starts.
         use droidtop_agent_service::sharing::Sharing;
         for d in devices.iter().filter(|d| d.viewer.is_some()) {
             let mut choice = self.sharing.get(&d.id).copied().unwrap_or_default();
