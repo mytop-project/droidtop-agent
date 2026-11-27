@@ -15,9 +15,9 @@ rust-version = "1.91"
 # The shared libraries (mytop-project/tracker#867): each a repository of its own that belongs to no program,
 # pinned coherently. The cancellation API is pinned by commit until its release tag lands; all three sync crates
 # use the same source so Store and identity types cannot split. Crate names remain those imported by this workspace.
-droidtop-agent-core = { package = "sync-core", git = "https://github.com/mytop-project/mytop-sync", rev = "1efee9d6b24e8ccf1bd9805a6ebff52edda46b19" }
-droidtop-agent-store = { package = "sync-store", git = "https://github.com/mytop-project/mytop-sync", rev = "1efee9d6b24e8ccf1bd9805a6ebff52edda46b19" }
-droidtop-agent-pair = { package = "sync-pair", git = "https://github.com/mytop-project/mytop-sync", rev = "1efee9d6b24e8ccf1bd9805a6ebff52edda46b19" }
+droidtop-agent-core = { package = "sync-core", git = "https://github.com/mytop-project/mytop-sync", rev = "e07949e2ce7519cc5697c1bf1385285791025c77" }
+droidtop-agent-store = { package = "sync-store", git = "https://github.com/mytop-project/mytop-sync", rev = "e07949e2ce7519cc5697c1bf1385285791025c77" }
+droidtop-agent-pair = { package = "sync-pair", git = "https://github.com/mytop-project/mytop-sync", rev = "e07949e2ce7519cc5697c1bf1385285791025c77" }
 # mytop-net's share client, for store and forward through a WebDAV share (docs/DESIGN.md section 10,
 # transport 3; mytop-project/tracker#800). WebDAV only: no SFTP (russh) in the agent until it uses it. Only the
 # service's optional `webdav` feature takes it, which the agent and the app turn on and Pythia's crates do not.
