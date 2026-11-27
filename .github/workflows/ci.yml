@@ -390,6 +390,25 @@ jobs:
           assert store.announcements() == {}
           assert droidtop_agent.pair.status() == {"state": "idle"}
           assert isinstance(droidtop_agent.pair.places(), list)
+          # Preparation reserves ownership only. Cancelling before finish must never attempt the remote connection.
+          pending = droidtop_agent.pair.prepare_pick("unused", "CI", "pythia", "127.0.0.1:9")
+          pending.cancel()
+          try:
+              pending.finish()
+              raise SystemExit("cancelled pick was allowed to finish")
+          except AgentError as e:
+              assert "stopped" in str(e).lower(), str(e)
+          try:
+              pending.finish()
+              raise SystemExit("a pick operation was allowed to finish twice")
+          except AgentError as e:
+              assert "already" in str(e).lower(), str(e)
+          try:
+              droidtop_agent.pair.prepare_confirm("123456")
+              raise SystemExit("confirmation without a comparison was allowed")
+          except AgentError:
+              pass
+          assert store.devices() == []
           assert droidtop_agent.saves.copies() == []
           folder = tempfile.mkdtemp(prefix="ci-game-")
           launcher = os.path.join(tempfile.mkdtemp(prefix="ci-launchers-"), "Battle.net")

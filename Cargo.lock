@@ -7635,8 +7635,8 @@ dependencies = [
 
 [[package]]
 name = "sync-core"
-version = "0.2.2"
-source = "git+https://github.com/mytop-project/mytop-sync?tag=v0.2.2#e54f899730cd15d26601ff6e3a08ef3c78dea1e2"
+version = "0.2.3"
+source = "git+https://github.com/mytop-project/mytop-sync?rev=1efee9d6b24e8ccf1bd9805a6ebff52edda46b19#1efee9d6b24e8ccf1bd9805a6ebff52edda46b19"
 dependencies = [
  "age",
  "boringtun",
@@ -7660,8 +7660,8 @@ dependencies = [
 
 [[package]]
 name = "sync-pair"
-version = "0.2.2"
-source = "git+https://github.com/mytop-project/mytop-sync?tag=v0.2.2#e54f899730cd15d26601ff6e3a08ef3c78dea1e2"
+version = "0.2.3"
+source = "git+https://github.com/mytop-project/mytop-sync?rev=1efee9d6b24e8ccf1bd9805a6ebff52edda46b19#1efee9d6b24e8ccf1bd9805a6ebff52edda46b19"
 dependencies = [
  "if-addrs",
  "sync-core",
@@ -7670,8 +7670,8 @@ dependencies = [
 
 [[package]]
 name = "sync-store"
-version = "0.2.2"
-source = "git+https://github.com/mytop-project/mytop-sync?tag=v0.2.2#e54f899730cd15d26601ff6e3a08ef3c78dea1e2"
+version = "0.2.3"
+source = "git+https://github.com/mytop-project/mytop-sync?rev=1efee9d6b24e8ccf1bd9805a6ebff52edda46b19#1efee9d6b24e8ccf1bd9805a6ebff52edda46b19"
 dependencies = [
  "dirs 5.0.1",
  "gethostname 0.5.0",

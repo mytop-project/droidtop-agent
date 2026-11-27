@@ -1381,6 +1381,34 @@ identity, pairing, channel, transports, library, saves and scanner.
   ("Pythia serves this computer"). Today only the refusal says so
   (`crates/python/src/service.rs`).
 
+### Owned comparison work for embedded UIs (2026-11-27)
+
+The Python pairing binding separates reservation from network work. An embedder
+holds its short ownership/generation guard while calling
+`pair.prepare_pick(id, name, program, address)` or
+`pair.prepare_confirm(expected_code=None)`. The latter validates the optional
+code atomically while taking the comparison; an owned UI passes the code it
+actually displayed. The returned `Pick.finish()` or
+`Confirmation.finish(same)` runs outside the embedder's lock and releases the
+interpreter. Either returned object also has `cancel()`, scoped to its captured
+generation; it cannot reset or publish into a newer comparison. Existing
+`pair.pick` and `pair.confirm` signatures remain compatible wrappers.
+
+Preparing a pick starts no remote connection or discovery. It replaces the
+current generation and cancels its existing work; waking an existing local
+listener uses the established cancellation wake (at most its one-second
+loopback-connect deadline). Preparing confirmation performs no network I/O.
+`stop()` retains the comparison cancellation handle even after confirmation
+has taken the comparison and is waiting for the other screen.
+
+The coherent mytop-sync family pin supplies `ComparisonCancel` (0.2.3). A weak
+socket handle interrupts handshake/confirmation without keeping an old socket
+alive. A short commit mutex orders cancellation against local identity
+persistence: if cancellation wins, no identity is pinned locally; if persistence
+wins, the completed operation returns the paired name truthfully. This does not
+roll back pairing already committed. Generation checks prevent late accept,
+pick or confirmation workers from overwriting a newer screen's phase.
+
 ## 17. Starting a game for a handheld
 
 Owner (2026-10-14, mytop-project/tracker#552): "Steam link streaming is actually

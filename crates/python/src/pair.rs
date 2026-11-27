@@ -21,7 +21,11 @@ pub fn fill(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(pick, m)?)?;
     m.add_function(wrap_pyfunction!(compare_status, m)?)?;
     m.add_function(wrap_pyfunction!(confirm, m)?)?;
+    m.add_function(wrap_pyfunction!(prepare_confirm, m)?)?;
+    m.add_function(wrap_pyfunction!(prepare_pick, m)?)?;
     m.add_function(wrap_pyfunction!(stop, m)?)?;
+    m.add_class::<Confirmation>()?;
+    m.add_class::<Pick>()?;
     Ok(())
 }
 
@@ -141,27 +145,79 @@ enum Phase {
 struct Compare {
     phase: Phase,
     comparison: Option<droidtop_agent_pair::Comparison>,
-    /// The flag that stops the offer under way, if any.
-    cancel: Option<Arc<droidtop_agent_core::accept::Cancel>>,
+    generation: Option<Generation>,
 }
 
-static COMPARE: Mutex<Compare> = Mutex::new(Compare { phase: Phase::Idle, comparison: None, cancel: None });
-
-fn set_phase(phase: Phase) {
-    COMPARE.lock().unwrap().phase = phase;
+#[derive(Clone)]
+struct Generation {
+    offering: Arc<droidtop_agent_core::accept::Cancel>,
+    comparison: Arc<droidtop_agent_pair::ComparisonCancel>,
 }
 
-/// Stops any offer or comparison under way; returns a fresh cancel flag.
-fn reset() -> Arc<droidtop_agent_core::accept::Cancel> {
-    let mut c = COMPARE.lock().unwrap();
-    if let Some(cancel) = &c.cancel {
-        cancel.cancel();
+impl Generation {
+    fn new() -> Self {
+        Self {
+            offering: Arc::new(droidtop_agent_core::accept::Cancel::new()),
+            comparison: Arc::new(droidtop_agent_pair::ComparisonCancel::new()),
+        }
     }
+
+    fn cancel(&self) {
+        self.offering.cancel();
+        self.comparison.cancel();
+    }
+
+    fn is_cancelled(&self) -> bool {
+        self.offering.is_cancelled() || self.comparison.is_cancelled()
+    }
+
+    fn same(&self, other: &Self) -> bool {
+        Arc::ptr_eq(&self.offering, &other.offering)
+    }
+}
+
+static COMPARE: Mutex<Compare> = Mutex::new(Compare { phase: Phase::Idle, comparison: None, generation: None });
+
+fn is_current(c: &Compare, generation: &Generation) -> bool {
+    c.generation.as_ref().is_some_and(|current| current.same(generation)) && !generation.is_cancelled()
+}
+
+fn set_phase(generation: &Generation, phase: Phase) -> bool {
+    let mut c = COMPARE.locked();
+    if !is_current(&c, generation) {
+        return false;
+    }
+    c.phase = phase;
+    true
+}
+
+/// Stops the current generation, including a comparison already moved into a waiting confirmation.
+fn reset() -> Generation {
+    let mut c = COMPARE.locked();
+    if let Some(generation) = &c.generation {
+        generation.cancel();
+    }
+    let generation = Generation::new();
     c.comparison = None;
     c.phase = Phase::Idle;
-    let cancel = Arc::new(droidtop_agent_core::accept::Cancel::new());
-    c.cancel = Some(cancel.clone());
-    cancel
+    c.generation = Some(generation.clone());
+    generation
+}
+
+fn cancel_generation(generation: &Generation) {
+    let mut c = COMPARE.locked();
+    generation.cancel();
+    if c.generation.as_ref().is_some_and(|current| current.same(generation)) {
+        c.comparison = None;
+        c.phase = Phase::Idle;
+    }
+}
+
+fn check_expected_code(expected: Option<&str>, actual: &str) -> Result<(), String> {
+    if expected.is_some_and(|expected| expected != actual) {
+        return Err("The comparison code changed. Check both screens before answering again.".into());
+    }
+    Ok(())
 }
 
 /// This computer offers to be picked by a handheld or another computer
@@ -175,19 +231,23 @@ fn reset() -> Arc<droidtop_agent_core::accept::Cancel> {
 fn offer(py: Python<'_>) -> PyResult<PyObject> {
     run(py, || {
         let a = agent()?;
-        let cancel = reset();
+        let generation = reset();
         let offering = droidtop_agent_pair::offer(&a.store, crate::program())?;
         let reply = json!({ "name": offering.offer.name, "port": offering.offer.port });
-        set_phase(Phase::Offering(std::time::Instant::now()));
-        thread::spawn(move || match offering.accept(&a.store, &cancel) {
-            Ok(comparison) if !cancel.is_cancelled() => {
-                let mut c = COMPARE.lock().unwrap();
-                c.phase = Phase::Comparing { code: comparison.code.clone(), name: comparison.name.clone() };
-                c.comparison = Some(comparison);
+        if !set_phase(&generation, Phase::Offering(std::time::Instant::now())) {
+            return Err("Pairing stopped.".into());
+        }
+        thread::spawn(move || match offering.accept_with_cancel(&a.store, &generation.offering, generation.comparison.clone()) {
+            Ok(comparison) => {
+                let mut c = COMPARE.locked();
+                if is_current(&c, &generation) {
+                    c.phase = Phase::Comparing { code: comparison.code.clone(), name: comparison.name.clone() };
+                    c.comparison = Some(comparison);
+                }
             }
-            Ok(_) => {}
-            Err(e) if !cancel.is_cancelled() => set_phase(Phase::Failed(e)),
-            Err(_) => {}
+            Err(e) => {
+                set_phase(&generation, Phase::Failed(e));
+            }
         });
         Ok(reply)
     })
@@ -213,18 +273,62 @@ fn find(py: Python<'_>, seconds: f64) -> PyResult<PyObject> {
 /// `code` this screen shows (the other shows the same one).
 #[pyfunction]
 fn pick(py: Python<'_>, id: String, name: String, program: String, address: String) -> PyResult<PyObject> {
-    run(py, move || {
-        let a = agent()?;
-        reset();
-        let at: std::net::SocketAddr = address.parse().map_err(|_| format!("{address} is not an address and port"))?;
-        let offer = droidtop_agent_core::discovery::Offer { id, name, port: at.port(), program };
-        let comparison = droidtop_agent_pair::pick(&a.store, &offer, at)?;
-        let reply = json!({ "code": comparison.code, "name": comparison.name });
-        let mut c = COMPARE.lock().unwrap();
-        c.phase = Phase::Comparing { code: comparison.code.clone(), name: comparison.name.clone() };
-        c.comparison = Some(comparison);
-        Ok(reply)
-    })
+    prepare_pick(py, id, name, program, address)?.finish(py)
+}
+
+struct PickWork {
+    offer: droidtop_agent_core::discovery::Offer,
+    at: std::net::SocketAddr,
+}
+
+/// One reserved outgoing comparison. Its network work can run after the caller releases its ownership lock.
+#[pyclass]
+struct Pick {
+    work: Mutex<Option<PickWork>>,
+    generation: Generation,
+}
+
+#[pymethods]
+impl Pick {
+    fn finish(&self, py: Python<'_>) -> PyResult<PyObject> {
+        let work = self.work.locked().take().ok_or_else(|| crate::AgentError::new_err("This computer was already picked."))?;
+        let generation = self.generation.clone();
+        run(py, move || {
+            if generation.is_cancelled() {
+                return Err("Pairing stopped.".into());
+            }
+            let a = agent()?;
+            let comparison = match droidtop_agent_pair::pick_with_cancel(&a.store, &work.offer, work.at, generation.comparison.clone()) {
+                Ok(comparison) => comparison,
+                Err(error) => {
+                    set_phase(&generation, Phase::Failed(error.clone()));
+                    return Err(error);
+                }
+            };
+            let reply = json!({ "code": comparison.code, "name": comparison.name });
+            let mut c = COMPARE.locked();
+            if !is_current(&c, &generation) {
+                return Err("Pairing stopped.".into());
+            }
+            c.phase = Phase::Comparing { code: comparison.code.clone(), name: comparison.name.clone() };
+            c.comparison = Some(comparison);
+            Ok(reply)
+        })
+    }
+
+    fn cancel(&self, py: Python<'_>) {
+        py.allow_threads(|| cancel_generation(&self.generation));
+    }
+}
+
+/// Reserves the generation synchronously, without starting network work. Call `finish` outside the ownership lock.
+#[pyfunction]
+fn prepare_pick(py: Python<'_>, id: String, name: String, program: String, address: String) -> PyResult<Pick> {
+    let at: std::net::SocketAddr =
+        address.parse().map_err(|_| crate::AgentError::new_err(format!("{address} is not an address and port")))?;
+    let offer = droidtop_agent_core::discovery::Offer { id, name, port: at.port(), program };
+    let generation = py.allow_threads(reset);
+    Ok(Pick { work: Mutex::new(Some(PickWork { offer, at })), generation })
 }
 
 /// Where pairing by comparison is: `state` is `idle`, `offering` (with
@@ -250,24 +354,57 @@ fn compare_status(py: Python<'_>) -> PyResult<PyObject> {
 /// its name. "They don't match" on either side pairs nothing.
 #[pyfunction]
 fn confirm(py: Python<'_>, same: bool) -> PyResult<PyObject> {
-    run(py, move || {
-        let a = agent()?;
-        let comparison = {
-            let mut c = COMPARE.lock().unwrap();
-            let taken = c.comparison.take().ok_or("No comparison is under way.")?;
-            c.phase = Phase::Finishing;
-            taken
-        };
-        match comparison.finish(&a.store, same) {
-            Ok(name) => {
-                set_phase(Phase::Paired(name.clone()));
-                Ok(json!(name))
+    prepare_confirm(py, None)?.finish(py, same)
+}
+
+/// An exact comparison captured before an asynchronous worker can be delayed behind a newer offer.
+#[pyclass]
+struct Confirmation {
+    comparison: Mutex<Option<droidtop_agent_pair::Comparison>>,
+    generation: Generation,
+}
+
+#[pymethods]
+impl Confirmation {
+    fn finish(&self, py: Python<'_>, same: bool) -> PyResult<PyObject> {
+        let comparison =
+            self.comparison.locked().take().ok_or_else(|| crate::AgentError::new_err("This comparison was already answered."))?;
+        let generation = self.generation.clone();
+        run(py, move || {
+            let a = agent()?;
+            match comparison.finish(&a.store, same) {
+                Ok(name) => {
+                    set_phase(&generation, Phase::Paired(name.clone()));
+                    Ok(json!(name))
+                }
+                Err(e) => {
+                    set_phase(&generation, Phase::Failed(e.clone()));
+                    Err(e)
+                }
             }
-            Err(e) => {
-                set_phase(Phase::Failed(e.clone()));
-                Err(e)
-            }
+        })
+    }
+
+    fn cancel(&self, py: Python<'_>) {
+        py.allow_threads(|| cancel_generation(&self.generation));
+    }
+}
+
+/// Takes the currently displayed comparison synchronously; `finish(same)` does the waiting outside caller locks.
+#[pyfunction]
+#[pyo3(signature = (expected_code = None))]
+fn prepare_confirm(py: Python<'_>, expected_code: Option<String>) -> PyResult<Confirmation> {
+    py.allow_threads(|| {
+        let mut c = COMPARE.locked();
+        let generation = c.generation.clone().ok_or_else(|| crate::AgentError::new_err("No comparison is under way."))?;
+        if generation.is_cancelled() {
+            return Err(crate::AgentError::new_err("Pairing stopped."));
         }
+        let comparison = c.comparison.as_ref().ok_or_else(|| crate::AgentError::new_err("No comparison is under way."))?;
+        check_expected_code(expected_code.as_deref(), &comparison.code).map_err(crate::AgentError::new_err)?;
+        let comparison = c.comparison.take().ok_or_else(|| crate::AgentError::new_err("No comparison is under way."))?;
+        c.phase = Phase::Finishing;
+        Ok(Confirmation { comparison: Mutex::new(Some(comparison)), generation })
     })
 }
 
@@ -278,4 +415,42 @@ fn stop(py: Python<'_>) -> PyResult<PyObject> {
         reset();
         Ok(json!(null))
     })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    static SERIAL: Mutex<()> = Mutex::new(());
+
+    #[test]
+    fn an_old_worker_cannot_publish_into_or_cancel_a_newer_comparison() {
+        let _serial = SERIAL.locked();
+        let old = reset();
+        let current = reset();
+        assert!(set_phase(&current, Phase::Comparing { code: "654321".into(), name: "new".into() }));
+        assert!(!set_phase(&old, Phase::Paired("old".into())));
+        cancel_generation(&old);
+        assert!(!current.is_cancelled());
+        assert!(matches!(&COMPARE.locked().phase, Phase::Comparing { code, .. } if code == "654321"));
+        reset();
+    }
+
+    #[test]
+    fn stopping_finishing_keeps_and_cancels_its_ownership_handle() {
+        let _serial = SERIAL.locked();
+        let current = reset();
+        assert!(set_phase(&current, Phase::Finishing));
+        cancel_generation(&current);
+        assert!(current.comparison.is_cancelled());
+        assert!(matches!(COMPARE.locked().phase, Phase::Idle));
+        assert!(!set_phase(&current, Phase::Paired("late result".into())));
+    }
+
+    #[test]
+    fn an_answer_to_an_older_displayed_code_is_rejected() {
+        assert!(check_expected_code(Some("123456"), "654321").is_err());
+        assert!(check_expected_code(Some("654321"), "654321").is_ok());
+        // Existing callers keep their original signature, while owned UI operations supply the observed code.
+        assert!(check_expected_code(None, "654321").is_ok());
+    }
 }
