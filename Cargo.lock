@@ -2500,8 +2500,8 @@ dependencies = [
 
 [[package]]
 name = "games-scan"
-version = "0.4.1"
-source = "git+https://github.com/mytop-project/mytop-games?tag=v0.4.1#606a51e45468cde4b50a7e923feb1dd8b74aeb24"
+version = "0.4.2"
+source = "git+https://github.com/mytop-project/mytop-games?tag=v0.4.2#0eeca91843c1587c51c473a4aff9a8bd371d1818"
 dependencies = [
  "dirs 5.0.1",
  "engines-detect",
@@ -5553,8 +5553,8 @@ dependencies = [
 
 [[package]]
 name = "plugins-contexts"
-version = "0.3.1"
-source = "git+https://github.com/mytop-project/mytop-plugins?tag=v0.3.1#a801f3be2c3f167dc423ea46cb8990e91a42c2a4"
+version = "0.3.4"
+source = "git+https://github.com/mytop-project/mytop-plugins?tag=v0.3.4#eb4ce461c47f392b22ade67307e4e46d5e202472"
 dependencies = [
  "serde_json",
  "sha2 0.10.9",
@@ -6883,8 +6883,8 @@ checksum = "c62751faa8bc286982334a082fe125184a29fc89d17775766e4f891b7d726980"
 
 [[package]]
 name = "saves-locate"
-version = "0.3.1"
-source = "git+https://github.com/mytop-project/mytop-saves?tag=v0.3.1#68aaa9a984fdca8db79eae3a88faa60309abd077"
+version = "0.3.2"
+source = "git+https://github.com/mytop-project/mytop-saves?tag=v0.3.2#1783e0d0550c6664530582a527d63db4cee309ae"
 dependencies = [
  "dirs 5.0.1",
  "flate2",
@@ -7636,7 +7636,7 @@ dependencies = [
 [[package]]
 name = "sync-core"
 version = "0.2.3"
-source = "git+https://github.com/mytop-project/mytop-sync?rev=e07949e2ce7519cc5697c1bf1385285791025c77#e07949e2ce7519cc5697c1bf1385285791025c77"
+source = "git+https://github.com/mytop-project/mytop-sync?tag=v0.2.3#0234775933faf02049acfe1eea4267bddb5ca2f1"
 dependencies = [
  "age",
  "boringtun",
@@ -7661,7 +7661,7 @@ dependencies = [
 [[package]]
 name = "sync-pair"
 version = "0.2.3"
-source = "git+https://github.com/mytop-project/mytop-sync?rev=e07949e2ce7519cc5697c1bf1385285791025c77#e07949e2ce7519cc5697c1bf1385285791025c77"
+source = "git+https://github.com/mytop-project/mytop-sync?tag=v0.2.3#0234775933faf02049acfe1eea4267bddb5ca2f1"
 dependencies = [
  "if-addrs",
  "sync-core",
@@ -7671,7 +7671,7 @@ dependencies = [
 [[package]]
 name = "sync-store"
 version = "0.2.3"
-source = "git+https://github.com/mytop-project/mytop-sync?rev=e07949e2ce7519cc5697c1bf1385285791025c77#e07949e2ce7519cc5697c1bf1385285791025c77"
+source = "git+https://github.com/mytop-project/mytop-sync?tag=v0.2.3#0234775933faf02049acfe1eea4267bddb5ca2f1"
 dependencies = [
  "dirs 5.0.1",
  "gethostname 0.5.0",

@@ -1401,7 +1401,9 @@ loopback-connect deadline). Preparing confirmation performs no network I/O.
 `stop()` retains the comparison cancellation handle even after confirmation
 has taken the comparison and is waiting for the other screen.
 
-The coherent mytop-sync family pin supplies `ComparisonCancel` (0.2.3). A weak
+The coherent released family uses mytop-sync v0.2.3, mytop-games v0.4.2,
+mytop-saves v0.3.2 and mytop-plugins v0.3.4, with identical tag selectors
+through every consumer. The sync pin supplies `ComparisonCancel` (0.2.3). A weak
 socket handle interrupts handshake/confirmation without keeping an old socket
 alive. A short commit mutex orders cancellation against local identity
 persistence: if cancellation wins, no identity is pinned locally; if persistence

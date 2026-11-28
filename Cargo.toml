@@ -13,19 +13,19 @@ rust-version = "1.91"
 
 [workspace.dependencies]
 # The shared libraries (mytop-project/tracker#867): each a repository of its own that belongs to no program,
-# pinned coherently. The cancellation API is pinned by commit until its release tag lands; all three sync crates
-# use the same source so Store and identity types cannot split. Crate names remain those imported by this workspace.
-droidtop-agent-core = { package = "sync-core", git = "https://github.com/mytop-project/mytop-sync", rev = "e07949e2ce7519cc5697c1bf1385285791025c77" }
-droidtop-agent-store = { package = "sync-store", git = "https://github.com/mytop-project/mytop-sync", rev = "e07949e2ce7519cc5697c1bf1385285791025c77" }
-droidtop-agent-pair = { package = "sync-pair", git = "https://github.com/mytop-project/mytop-sync", rev = "e07949e2ce7519cc5697c1bf1385285791025c77" }
+# pinned coherently. All sync consumers use the same released family and tag source so Store and identity
+# types cannot split. Crate names remain those imported by this workspace.
+droidtop-agent-core = { package = "sync-core", git = "https://github.com/mytop-project/mytop-sync", tag = "v0.2.3" }
+droidtop-agent-store = { package = "sync-store", git = "https://github.com/mytop-project/mytop-sync", tag = "v0.2.3" }
+droidtop-agent-pair = { package = "sync-pair", git = "https://github.com/mytop-project/mytop-sync", tag = "v0.2.3" }
 # mytop-net's share client, for store and forward through a WebDAV share (docs/DESIGN.md section 10,
 # transport 3; mytop-project/tracker#800). WebDAV only: no SFTP (russh) in the agent until it uses it. Only the
 # service's optional `webdav` feature takes it, which the agent and the app turn on and Pythia's crates do not.
 net-remote = { git = "https://github.com/mytop-project/mytop-net", tag = "v0.2.6", default-features = false }
-# The mytop-sync 0.2 releases (mytop-project/tracker#573): mytop-games v0.4.0, mytop-saves v0.3.0, mytop-plugins v0.3.0.
-droidtop-agent-scan = { package = "games-scan", git = "https://github.com/mytop-project/mytop-games", tag = "v0.4.1" }
-droidtop-agent-saves = { package = "saves-locate", git = "https://github.com/mytop-project/mytop-saves", tag = "v0.3.1" }
-droidtop-agent-contexts = { package = "plugins-contexts", git = "https://github.com/mytop-project/mytop-plugins", tag = "v0.3.1" }
+# Coherent mytop-sync 0.2.3 family (mytop-project/tracker#573): games 0.4.2, saves 0.3.2, plugins 0.3.4.
+droidtop-agent-scan = { package = "games-scan", git = "https://github.com/mytop-project/mytop-games", tag = "v0.4.2" }
+droidtop-agent-saves = { package = "saves-locate", git = "https://github.com/mytop-project/mytop-saves", tag = "v0.3.2" }
+droidtop-agent-contexts = { package = "plugins-contexts", git = "https://github.com/mytop-project/mytop-plugins", tag = "v0.3.4" }
 # windowcast's device identity and pairing, used as they are (docs/DESIGN.md
 # section 3). Pinned by commit; both crates are GPL-3.0-only, which is why
 # this workspace is too.
